@@ -8,7 +8,12 @@
 
 
 async function httpGetALLTours(req , res) {
-  return res.status(200).json(await GetALLTours());
+  const filter = {...req.query};
+  const execludeFileds = ['page','sort','limit','fields'];
+  execludeFileds.forEach((el) => delete filter[el]);
+ 
+  const tours = await GetALLTours(filter)
+  return res.status(200).json(tours) ;
 }
 
  async function httpCreateNewTour (req , res) {

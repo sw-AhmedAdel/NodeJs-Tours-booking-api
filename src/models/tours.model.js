@@ -25,8 +25,8 @@ async function loadAlltours () {
 }
 
 //get all tours
-async function  GetALLTours () {
-  return await tours.find();
+async function  GetALLTours (filter) {
+  return await tours.find(filter);
 } 
 
 // post new tour
