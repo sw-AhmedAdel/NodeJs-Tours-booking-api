@@ -6,13 +6,16 @@
    deleteAllData,
 } = require('../../models/tours.model');
 
+const {getPagination} = require('../../services/query');
+
 
 async function httpGetALLTours(req , res) {
   const filter = {...req.query};
+  const {skip , limit} = getPagination(filter);
   const execludeFileds = ['page','sort','limit','fields'];
   execludeFileds.forEach((el) => delete filter[el]);
  
-  const tours = await GetALLTours(filter)
+  const tours = await GetALLTours(filter , skip , limit)
   return res.status(200).json(tours) ;
 }
 

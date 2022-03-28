@@ -25,8 +25,10 @@ async function loadAlltours () {
 }
 
 //get all tours
-async function  GetALLTours (filter) {
-  return await tours.find(filter);
+async function  GetALLTours (filter  , skip , limit) {
+  return await tours.find(filter)
+  .skip(skip)
+  .limit(limit)
 } 
 
 // post new tour
