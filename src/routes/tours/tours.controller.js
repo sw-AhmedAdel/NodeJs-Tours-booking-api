@@ -43,8 +43,29 @@ async function httpUpdateTour (req , res) {
   }
 }
 
+async function httpDeleteTour (req , res) {
+  try {
+  const id = req.params.id;
+  const tour = await findTour(id);
+  if(!tour) {
+    return res.status(400).json({
+      error:'tour is not find'
+    })
+  } 
+   
+  await tour.remove();
+  return res.status(200).json(tour);
+
+  }catch(err) {
+    return res.status(400).json({
+      message : err,
+    })
+  }
+}
+
  module.exports = {
    httpPostNewTour,
    httpGetALLTours,
-   httpUpdateTour
+   httpUpdateTour,
+   httpDeleteTour
  }

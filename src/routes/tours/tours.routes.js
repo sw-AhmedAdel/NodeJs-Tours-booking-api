@@ -3,10 +3,13 @@
  const {
   httpGetALLTours,
   httpPostNewTour,
-  httpUpdateTour
+  httpUpdateTour,
+  httpDeleteTour
  } = require('./tours.controller');
 
  toursRoutes.get('/', httpGetALLTours);
  toursRoutes.post('/' , httpPostNewTour);
  toursRoutes.patch('/:id', httpUpdateTour)
+ toursRoutes.delete('/:id' , httpDeleteTour);
+
  module.exports = toursRoutes;
