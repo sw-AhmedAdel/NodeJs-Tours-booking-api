@@ -59,5 +59,5 @@ const toursSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-const tours = mongoose.model('Tour' , URLSearchParams);
+const tours = mongoose.model('Tour' , toursSchema);
 module.exports = tours;
