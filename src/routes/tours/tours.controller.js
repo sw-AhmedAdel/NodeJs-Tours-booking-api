@@ -1,6 +1,8 @@
  const {
    PostNewTour,
-   GetALLTours
+   GetALLTours,
+   findTour,
+  UpdateTour
 } = require('../../models/tours.model');
 
 
@@ -21,7 +23,28 @@ async function httpGetALLTours(req , res) {
    }
  }
 
+async function httpUpdateTour (req , res) {
+
+ try {
+  const id = req.params.id;
+  const tour = await findTour(id);
+  if(!tour) {
+    return res.status(400).json({
+      error:'tour is not find'
+    })
+  } 
+   const NewTour = await UpdateTour(id , req.body);
+   return res.status(200).json(NewTour);
+ }
+  catch(err) {
+    return res.status(400).json({
+      message:err,
+    })
+  }
+}
+
  module.exports = {
    httpPostNewTour,
-   httpGetALLTours
+   httpGetALLTours,
+   httpUpdateTour
  }

@@ -12,8 +12,23 @@ async function PostNewTour (tour) {
   return NewTour;
 }
 
+async function findTour (id ){
+  return await tours.findOne({
+    _id : id
+  })
+}
+
+async function UpdateTour (id , tour) {
+  const NewTour = await tours.findByIdAndUpdate(id , tour , {
+    new: true,
+    runValidators:true,
+  })
+  return NewTour;
+} 
 
 module.exports = {
   PostNewTour,
-  GetALLTours
+  GetALLTours,
+  findTour,
+  UpdateTour
 }
