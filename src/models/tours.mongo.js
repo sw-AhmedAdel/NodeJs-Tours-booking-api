@@ -4,16 +4,17 @@ const toursSchema = new mongoose.Schema({
     type: String,
     required: [true , 'tour must have a name'],
     unique: true,
+    trim:true,
   },
   price :{
     type:Number,
     required: [true, 'tour must have a price'],
   },
-  ratingAverage : {
+  ratingsAverage : {
     type:Number,
     default:0
   },
-  ratingQuantity : {
+  ratingsQuantity : {
     type:Number,
     default:0
   },
