@@ -1,8 +1,9 @@
  const {
-   PostNewTour,
    GetALLTours,
+   CreateNewTour,
    findTour,
-  UpdateTour
+   UpdateTour,
+   deleteAllData,
 } = require('../../models/tours.model');
 
 
@@ -10,10 +11,10 @@ async function httpGetALLTours(req , res) {
   return res.status(200).json(await GetALLTours());
 }
 
- async function httpPostNewTour (req , res) {
+ async function httpCreateNewTour (req , res) {
    try {
    const tour = req.body;
-   await PostNewTour(tour);
+   await CreateNewTour(tour);
    return res.status(201).json(tour);
 
    }catch (err) {
@@ -63,9 +64,22 @@ async function httpDeleteTour (req , res) {
   }
 }
 
+async function httpdeleteAllData(req , res) {
+  const data = await deleteAllData();
+  if(!data) {
+    return res.status(400).json({
+      error:"there is no data to delete",
+    })
+  }
+  return res.status(200).json({
+    ok : true,
+  })
+}
+
  module.exports = {
-   httpPostNewTour,
+   httpCreateNewTour,
    httpGetALLTours,
    httpUpdateTour,
-   httpDeleteTour
+   httpDeleteTour,
+   httpdeleteAllData
  }

@@ -2,14 +2,16 @@
  const toursRoutes = express.Router();
  const {
   httpGetALLTours,
-  httpPostNewTour,
+  httpCreateNewTour,
   httpUpdateTour,
-  httpDeleteTour
+  httpDeleteTour,
+  httpdeleteAllData
  } = require('./tours.controller');
 
  toursRoutes.get('/', httpGetALLTours);
- toursRoutes.post('/' , httpPostNewTour);
+ toursRoutes.post('/' , httpCreateNewTour);
  toursRoutes.patch('/:id', httpUpdateTour)
  toursRoutes.delete('/:id' , httpDeleteTour);
+ toursRoutes.delete('/', httpdeleteAllData)
 
  module.exports = toursRoutes;
