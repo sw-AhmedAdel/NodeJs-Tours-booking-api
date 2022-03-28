@@ -1,4 +1,12 @@
- const {PostNewTour} = require('../../models/tours.model');
+ const {
+   PostNewTour,
+   GetALLTours
+} = require('../../models/tours.model');
+
+
+async function httpGetALLTours(req , res) {
+  return res.status(200).json(await GetALLTours());
+}
 
  async function httpPostNewTour (req , res) {
    try {
@@ -15,4 +23,5 @@
 
  module.exports = {
    httpPostNewTour,
+   httpGetALLTours
  }
