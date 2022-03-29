@@ -59,6 +59,14 @@ const toursSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
+/*
+i could have added createdAt like filed 
+createdAt : {
+  type: Date,
+  default : Date.now,
+  select : false >> means do not show it to users
+}
+*/ 
 
 const tours = mongoose.model('Tour' , toursSchema);
 module.exports = tours;

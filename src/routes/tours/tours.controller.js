@@ -6,43 +6,27 @@
    deleteAllData,
 } = require('../../models/tours.model');
 
-const {getPagination} = require('../../services/query');
+const {
+  getPagination ,
+  filterFeatures
+} = require('../../services/query');
+
+
+
 
 
 async function httpGetALLTours(req , res) {
   const filter = {...req.query};
- 
-  // 1) pagination , use it for testing ?page=2&limit=2
   const {skip , limit} = getPagination(filter);
+  
   const execludeFileds = ['page','sort','limit','fields'];
-
   execludeFileds.forEach((el) => delete filter[el]);
- 
-  //2)  advanced filter use it for testing ?duration[gte]=7&price[gte]=497 use it to test
-  let modifyFilter = JSON.stringify(filter);
-  modifyFilter = modifyFilter.replace(/\b(gte|gt|lt|lte)\b/g , match => `$${match}`) ;
-  const finalFilter = JSON.parse(modifyFilter);
+  const features = new filterFeatures(req.query , filter);
 
-  // 3) sort , ust it for testing ?sort=price,ratingsAverage
-  let sortBy;
-  if(req.query.sort) {
-    console.log(req.query.sort)
-     sortBy =req.query.sort.split(',').join(' ');
-    console.log(sortBy);
-  }
-  else {
-    sortBy ='-createdAt';// sort by the newest
-  }
+  const finalFilter = features.filterFun();
+  const sortBy = features.sortBy();
+  const fields =features.filterFileds();
  
- 
- //4) select fileds
- //use it for testing ?fields=name,price
- let fields;
- if(req.query.fields) {
-  fields = req.query.fields.split(',').join(' ');
- } else {
-  fields ='-__V';
- }
  const tours = await GetALLTours(finalFilter , skip , limit , sortBy , fields)
   return res.status(200).json({
     success:true,
