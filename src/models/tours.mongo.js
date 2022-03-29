@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+ 
 const toursSchema = new mongoose.Schema({
   name :{
     type: String,
@@ -7,6 +8,7 @@ const toursSchema = new mongoose.Schema({
     trim:true,
     maxlength:[40 ,'A tour name must have less or equal than 40 chars'],
     minlength:[10 ,'A tour name must have more or equal than 10 chars'],
+   
   },
   price :{
     type:Number,
@@ -49,6 +51,13 @@ const toursSchema = new mongoose.Schema({
   ,
   priceDiscount :{
     type:Number,
+    validate:{
+      //this works for only create new tour, if i want to update this will not work 
+      validator: function(val) {
+        return val < this.price;
+      },
+      message :'Discount price ({VALUE}) should be below original price'
+    }
   },
    
   imageCover : {
@@ -90,7 +99,7 @@ toursSchema.pre('save', function(next) {
   next();
 })
 
-//use middleware to do some actions after saving the data
+//use middleware to do some actions after saving the data and it does not work for update
 toursSchema.post('save', function(doc, next){
  //console.log(doc);
  console.log(`saved doc took ${Date.now() - this.start } milsec` )
@@ -121,3 +130,4 @@ toursSchema.pre('aggregate', function(next) {
 
 const tours = mongoose.model('Tour' , toursSchema);
 module.exports = tours;
+
