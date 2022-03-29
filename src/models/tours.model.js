@@ -26,11 +26,13 @@ async function loadAlltours () {
 
 //get all tours
 async function  GetALLTours (filter  , skip , limit , sortBy , fields) {
-  return await tours.find(filter)
+  return await tours.find(filter , {
+    '__v': 0
+  })
   .skip(skip)
   .limit(limit)
   .sort(sortBy)
-  .select(fields);
+ 
   
 } 
 
@@ -106,6 +108,53 @@ async function GetToursStates () {
   return stats;
 }
 
+async function GetToursForEachMonth (year) {
+  const monthlyTours = await tours.aggregate([
+   
+    {
+    // stage number 1 means git the document from startDates to do some operations
+    $unwind :'$startDates'
+    }
+    ,
+    // stage number 2  use match to get the dates between 2021
+    {
+      $match: {
+        startDates : {
+          $gte:new Date(`${year}-01-01`),
+          $lte:new Date(`${year}-12-31`)
+        }
+      }
+    }
+    ,
+
+    {
+      $group: {
+        _id: {$month: '$startDates'},//means get me each tour in the same month and put it in group
+        numToursStart:{$sum: 1}, // count each tour in group
+        tours: {$push : '$name'},
+      }
+    }
+    , 
+    {
+      $addFields: {month :'$_id'}
+    }
+    ,
+    {
+     $project:{
+        _id : 0
+      }
+    }
+    ,
+    {
+      $sort : {
+        numToursStart: -1
+      }
+    }
+  ])
+
+  return monthlyTours;
+}
+
 module.exports = {
   CreateNewTour,
   GetALLTours,
@@ -113,5 +162,6 @@ module.exports = {
   UpdateTour,
   deleteAllData,
   loadAlltours,
-  GetToursStates
+  GetToursStates,
+  GetToursForEachMonth
 }

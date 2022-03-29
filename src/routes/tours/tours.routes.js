@@ -6,7 +6,8 @@
   httpUpdateTour,
   httpDeleteTour,
   httpdeleteAllData,
-  httpGetToursStates
+  httpGetToursStates,
+  httpGetToursForEachMonth
  } = require('./tours.controller');
 
 const {
@@ -21,4 +22,5 @@ const {
  toursRoutes.delete('/:id' , httpDeleteTour);
  toursRoutes.delete('/', httpdeleteAllData)
  toursRoutes.get('/tours.stats', httpGetToursStates);
+ toursRoutes.get('/monthly.plan/:year' , httpGetToursForEachMonth);
  module.exports = toursRoutes;

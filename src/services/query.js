@@ -42,10 +42,9 @@ class filterFeatures {
 
   //filter Fileds use it for testing ?fields=name,price
   filterFileds(){
+   
     if(this.query.fields) {
-      return req.query.fields.split(',').join(' ');
-     } else {
-       return  -'__v';
+      return  req.query.fields.split(',').join(' ');
      }
   }
 }

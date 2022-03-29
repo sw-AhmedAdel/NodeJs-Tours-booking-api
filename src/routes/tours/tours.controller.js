@@ -5,6 +5,7 @@
    UpdateTour,
    deleteAllData,
    GetToursStates,
+   GetToursForEachMonth
 } = require('../../models/tours.model');
 
 const {
@@ -115,6 +116,21 @@ async function httpGetToursStates(req , res ) {
   })
 }
 
+async function httpGetToursForEachMonth (req , res) {
+  const year = Number(req.params.year);
+  const tours = await GetToursForEachMonth(year);
+  if(!tours){
+    return res.status(400).json({
+      error:'something went wrong'
+    })
+  }
+
+  return res.status(200).json({
+    status :'success',
+    data : tours
+  })
+}
+
 
  module.exports = {
    httpCreateNewTour,
@@ -122,5 +138,6 @@ async function httpGetToursStates(req , res ) {
    httpUpdateTour,
    httpDeleteTour,
    httpdeleteAllData,
-   httpGetToursStates
+   httpGetToursStates,
+   httpGetToursForEachMonth
  }
