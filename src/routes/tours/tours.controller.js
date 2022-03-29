@@ -4,6 +4,7 @@
    findTour,
    UpdateTour,
    deleteAllData,
+   GetToursStates,
 } = require('../../models/tours.model');
 
 const {
@@ -18,7 +19,7 @@ const {
 async function httpGetALLTours(req , res) {
   const filter = {...req.query};
   const {skip , limit} = getPagination(filter);
-  
+
   const execludeFileds = ['page','sort','limit','fields'];
   execludeFileds.forEach((el) => delete filter[el]);
   const features = new filterFeatures(req.query , filter);
@@ -100,10 +101,26 @@ async function httpdeleteAllData(req , res) {
   })
 }
 
+async function httpGetToursStates(req , res ) {
+  const stats = await GetToursStates();
+  if(!stats){
+    return res.status(400).json({
+      error:'something went wrong'
+    })
+  }
+
+  return res.status(200).json({
+    status :'success',
+    data : stats
+  })
+}
+
+
  module.exports = {
    httpCreateNewTour,
    httpGetALLTours,
    httpUpdateTour,
    httpDeleteTour,
-   httpdeleteAllData
+   httpdeleteAllData,
+   httpGetToursStates
  }
