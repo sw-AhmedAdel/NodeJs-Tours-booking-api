@@ -75,5 +75,16 @@ toursSchema.virtual('durationWeeks').get(function(){
   //if tour is 7 days, so 7 /7 = 1 this is one week
 })
 
+
+// use middleware to modify the data before saving it in mongo
+toursSchema.pre('save', function(next) {
+  next();
+})
+
+//use middleware to do some actions after saving the data
+toursSchema.post('save', function(next){
+  next();
+})
+
 const tours = mongoose.model('Tour' , toursSchema);
 module.exports = tours;
