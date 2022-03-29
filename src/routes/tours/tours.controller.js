@@ -12,23 +12,18 @@ const {getPagination} = require('../../services/query');
 async function httpGetALLTours(req , res) {
   const filter = {...req.query};
  
-  // 1) pagination
+  // 1) pagination , use it for testing ?page=2&limit=2
   const {skip , limit} = getPagination(filter);
   const execludeFileds = ['page','sort','limit','fields'];
+
   execludeFileds.forEach((el) => delete filter[el]);
  
-  //2)  advanced filter
-  // advanced filter, means user can use > >= < <= to get the data  like duration: { '$gte': '5' }  
-  // the code bellow is how i edit the $ sign in the gte || gt || lt || lte
-  //first convert the filter obj to string why ?? so i can use replace function to add $ gt gte lt lte
+  //2)  advanced filter use it for testing ?duration[gte]=7&price[gte]=497 use it to test
   let modifyFilter = JSON.stringify(filter);
   modifyFilter = modifyFilter.replace(/\b(gte|gt|lt|lte)\b/g , match => `$${match}`) ;
-  // b means change the exact word and g means change it if it multiple 
- 
   const finalFilter = JSON.parse(modifyFilter);
-  //?duration[gte]=7&price[gte]=497 use it to test
 
-  // 3) sort
+  // 3) sort , ust it for testing ?sort=price,ratingsAverage
   let sortBy;
   if(req.query.sort) {
     console.log(req.query.sort)
@@ -38,8 +33,17 @@ async function httpGetALLTours(req , res) {
   else {
     sortBy ='-createdAt';// sort by the newest
   }
-  // for test ?sort=price,ratingsAverage
-  const tours = await GetALLTours(finalFilter , skip , limit , sortBy)
+ 
+ 
+ //4) select fileds
+ //use it for testing ?fields=name,price
+ let fields;
+ if(req.query.fields) {
+  fields = req.query.fields.split(',').join(' ');
+ } else {
+  fields ='-__V';
+ }
+ const tours = await GetALLTours(finalFilter , skip , limit , sortBy , fields)
   return res.status(200).json({
     success:true,
     results: tours.length,
