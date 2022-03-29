@@ -78,13 +78,29 @@ toursSchema.virtual('durationWeeks').get(function(){
 
 // use middleware to modify the data before saving it in mongo
 toursSchema.pre('save', function(next) {
+  this.start = Date.now();
   next();
 })
 
 //use middleware to do some actions after saving the data
-toursSchema.post('save', function(next){
+toursSchema.post('save', function(doc, next){
+ //console.log(doc);
+ console.log(`saved doc took ${Date.now() - this.start } milsec` )
   next();
 })
+
+//use middleware on query , /^find/ means any query starts with find will run this code
+toursSchema.pre(/^find/ , function( next) {
+  this.find({secretTour : {$ne:true} } )
+  //means if i want to get all tours but there are many secret tours for vip customers use this midlleware 
+  next();
+})
+
+toursSchema.post(/^find/ , function(docs , next) {
+  //console.log(docs)
+  next();
+})
+
 
 const tours = mongoose.model('Tour' , toursSchema);
 module.exports = tours;
