@@ -65,6 +65,7 @@ async function deleteAllData() {
 
 
 async function GetToursStates () {
+  //aggregate is array will have the all document object
   const stats = await tours.aggregate([
     //first choose the filed that i want the all tours have in coomen
     // Stage number 1

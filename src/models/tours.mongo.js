@@ -89,9 +89,9 @@ toursSchema.post('save', function(doc, next){
   next();
 })
 
-//use middleware on query , /^find/ means any query starts with find will run this code
+//use middleware on query , /^find/ means any query starts with find will run this code,use to like  execlude some data
 toursSchema.pre(/^find/ , function( next) {
-  this.find({secretTour : {$ne:true} } )
+ // this.find( { price: { $ne :1497} } )
   //means if i want to get all tours but there are many secret tours for vip customers use this midlleware 
   next();
 })
@@ -101,6 +101,15 @@ toursSchema.post(/^find/ , function(docs , next) {
   next();
 })
 
+//here i execluded tour has price 1497 but if i want to see the all grouping tours using aggregate 
+//this tour will be there so i will use middleware aggregate to remove it
+
+ //aggregate is array will have the all document object so i can delete any thing from this array using unshift and match
+toursSchema.pre('aggregate', function(next) {
+  //pipelin is array has all object that i get using aggregate on grouping so in this array remove the tour using unshift
+  //this.pipeline().unshift({ $match : { price: { $ne :1497}  } })
+  next();
+})
 
 const tours = mongoose.model('Tour' , toursSchema);
 module.exports = tours;
