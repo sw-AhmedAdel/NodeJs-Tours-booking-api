@@ -18,7 +18,7 @@ const toursSchema = new mongoose.Schema({
     type:Number,
     default:0
   },
-  duration: {
+  duration: { // number of days
     type:Number,
     required:[true , 'A tour must have a duration']
   },
@@ -58,6 +58,8 @@ const toursSchema = new mongoose.Schema({
 
 }, {
   timestamps: true,
+  toJSON : {virtuals : true},
+  toObject : {virtuals : true}
 });
 /*
 i could have added createdAt like filed 
@@ -67,6 +69,11 @@ createdAt : {
   select : false >> means do not show it to users
 }
 */ 
+
+toursSchema.virtual('durationWeeks').get(function(){
+  return this.duration / 7;
+  //if tour is 7 days, so 7 /7 = 1 this is one week
+})
 
 const tours = mongoose.model('Tour' , toursSchema);
 module.exports = tours;
