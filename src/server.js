@@ -17,3 +17,12 @@ async function startServer() {
 }
 
 startServer();
+// handel all async promise rejections that i did not handle it,
+process.on('unhandledRejection' , err=> {
+  console.log(err.name , err.message);
+
+  //wait tell the server finishes all the request that are still pending or being handled at the time,
+  server.close(() => {
+    process.exit(1)
+  });
+})
