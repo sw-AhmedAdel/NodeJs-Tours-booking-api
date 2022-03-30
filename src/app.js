@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const api = require("./routes/api");
 const appError = require('../src/services/class.err.middleware');
-const {handlingErrorMiddleware} = require('../src/services/query');
+const {handlingErrorMiddleware} = require('../src/services/handling.error');
 
 app.use(express.json());
 
@@ -23,7 +23,7 @@ app.all("*", (req, res , next) => {
 app.use(handlingErrorMiddleware);
 
 /*
-//  Implementing a Global Error Handling Middleware
+// Implementing a Global Error Handling Middleware
 app.use((err , req , res , next) => {
   err.statusCode = err.statusCode || 500 ; // 500 > internal server error
   err.status = err.status || 'fail';
