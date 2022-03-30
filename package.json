@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "watch": "nodemon src/server.js",
-    "start-prod": "cross-env NODE_ENV=production nodemon src/server.js"
+    "prod": "cross-env NODE_ENV=production nodemon src/server.js"
   },
   "keywords": [],
   "author": "",

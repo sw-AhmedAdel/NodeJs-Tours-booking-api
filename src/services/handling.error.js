@@ -5,6 +5,18 @@ function handleInvalidId (err) {
  const message = `Invalid ${err.path}: ${err.value}`;
  return new appError(message , 400);
 }
+
+function handlingDuplicateDatabase  (err) {
+  const message = `${err.keyValue.name} is already exits, please use another name`;
+  return new appError(message , 400);
+}
+
+function handleMongoosError (err) {
+  const errors = Object.values(err.errors).map(el => el.message);
+  const message = `Invalid input data ${errors.join('. ')}`;
+  return new appError(message , 400);
+}
+
 //i want to see error while i am dev 
 function sendErrorDev (err , res) {
   return res.status(err.statusCode).json({
@@ -37,7 +49,7 @@ function handlingErrorMiddleware (err , req , res , next)  {
   err.statusCode = err.statusCode || 500 ; // 500 > internal server error
   err.status = err.status || 'fail';
 
-  if( process.env.NODE_ENV === 'development' ){
+  if( process.env.NODE_ENV === 'development'){
     sendErrorDev(err ,res);
    } 
    else  if( process.env.NODE_ENV === 'production'  ){
@@ -45,11 +57,17 @@ function handlingErrorMiddleware (err , req , res , next)  {
   
      if( error.name ==='CastError') {
       error = handleInvalidId (error);
-      sendErrorProd(error ,res);
      }
-   
-   } 
+     if(error.code === 11000) {
+      error = handlingDuplicateDatabase(error);
+    }
 
+    if(error.name === "ValidationError") {
+      error = handleMongoosError (error)
+    }
+    
+    sendErrorProd(error, res);    
+   } 
 }
 
 module.exports = {
