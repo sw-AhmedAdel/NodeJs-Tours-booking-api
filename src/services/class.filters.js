@@ -30,6 +30,4 @@ class filterFeatures {
 }
 
 
-module.exports = {
-  filterFeatures
-};
+module.exports =  filterFeatures

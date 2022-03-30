@@ -12,9 +12,7 @@ const {
   getPagination ,
 } = require('../../services/query');
 
-const {
-  filterFeatures
-} = require('../../services/class.filters');
+const filterFeatures = require('../../services/class.filters');
 
 
 
