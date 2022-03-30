@@ -30,8 +30,15 @@ function handlingErrorMiddleware (err , req , res , next)  {
     message : err.message,
   })
 }
+
+const catchAsync = fn => {
+  return (req , res , next) => {
+    fn(req , res , next).catch(next);
+  }
+}
 module.exports = {
   getPagination,
   getTopTours,
   handlingErrorMiddleware,
+  catchAsync
 };

@@ -17,7 +17,7 @@ const filterFeatures = require('../../services/class.filters');
 
 
 
-async function httpGetALLTours(req , res) {
+async function httpGetALLTours(req , res , next) {
   const filter = {...req.query};
   const {skip , limit} = getPagination(filter);
 
@@ -37,22 +37,16 @@ async function httpGetALLTours(req , res) {
   }) ;
 }
 
- async function httpCreateNewTour (req , res) {
-   try {
+
+
+  async function  httpCreateNewTour  (req , res , next)  {
    const tour = req.body;
    await CreateNewTour(tour);
    return res.status(201).json(tour);
 
-   }catch (err) {
-    return res.status(400).json({
-      message: err
-    });
-   }
  }
 
-async function httpUpdateTour (req , res) {
-
- try {
+async function httpUpdateTour (req , res , next) {
   const id = req.params.id;
   const tour = await findTour(id);
   if(!tour) {
@@ -62,16 +56,11 @@ async function httpUpdateTour (req , res) {
   } 
    const NewTour = await UpdateTour(id , req.body);
    return res.status(200).json(NewTour);
- }
-  catch(err) {
-    return res.status(400).json({
-      message:err,
-    })
-  }
 }
 
-async function httpDeleteTour (req , res) {
-  try {
+
+async function httpDeleteTour (req , res , next) {
+ 
   const id = req.params.id;
   const tour = await findTour(id);
   if(!tour) {
@@ -83,14 +72,9 @@ async function httpDeleteTour (req , res) {
   await tour.remove();
   return res.status(200).json(tour);
 
-  }catch(err) {
-    return res.status(400).json({
-      message : err,
-    })
-  }
 }
 
-async function httpdeleteAllData(req , res) {
+async function httpdeleteAllData(req , res , next) {
   const data = await deleteAllData();
   if(!data) {
     return res.status(400).json({
@@ -102,7 +86,7 @@ async function httpdeleteAllData(req , res) {
   })
 }
 
-async function httpGetToursStates(req , res ) {
+async function httpGetToursStates(req , res , next ) {
   const stats = await GetToursStates();
   if(!stats){
     return res.status(400).json({
@@ -116,7 +100,7 @@ async function httpGetToursStates(req , res ) {
   })
 }
 
-async function httpGetToursForEachMonth (req , res) {
+async function httpGetToursForEachMonth (req , res , next) {
   const year = Number(req.params.year);
   const tours = await GetToursForEachMonth(year);
   if(!tours){

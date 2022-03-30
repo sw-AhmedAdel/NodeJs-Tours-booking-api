@@ -14,13 +14,18 @@ const {
   getTopTours,
 } =require('../../services/query');
 
+const {
+  catchAsync
+} = require('../../services/query')
 
- toursRoutes.get('/', httpGetALLTours);
- toursRoutes.get('/top-tours' , getTopTours , httpGetALLTours);// use it to get this ?limit=5&sort=price,ratingsAverage
- toursRoutes.post('/' , httpCreateNewTour);
- toursRoutes.patch('/:id', httpUpdateTour)
- toursRoutes.delete('/:id' , httpDeleteTour);
- toursRoutes.delete('/', httpdeleteAllData)
- toursRoutes.get('/tours.stats', httpGetToursStates);
- toursRoutes.get('/monthly.plan/:year' , httpGetToursForEachMonth);
+
+
+ toursRoutes.get('/', catchAsync( httpGetALLTours));
+ toursRoutes.get('/top-tours' , getTopTours ,catchAsync( httpGetALLTours));// use it to get this ?limit=5&sort=price,ratingsAverage
+ toursRoutes.post('/' , catchAsync( httpCreateNewTour));
+ toursRoutes.patch('/:id',catchAsync( httpUpdateTour))
+ toursRoutes.delete('/:id' ,catchAsync( httpDeleteTour));
+ toursRoutes.delete('/',catchAsync( httpdeleteAllData))
+ toursRoutes.get('/tours.stats',catchAsync( httpGetToursStates));
+ toursRoutes.get('/monthly.plan/:year' ,catchAsync( httpGetToursForEachMonth));
  module.exports = toursRoutes;
