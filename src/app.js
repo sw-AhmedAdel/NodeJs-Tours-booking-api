@@ -6,6 +6,8 @@ const {handlingErrorMiddleware} = require('../src/services/handling.error');
 
 app.use(express.json());
 
+
+
 app.use("/v1", api);
 
 
