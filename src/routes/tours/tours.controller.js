@@ -117,6 +117,7 @@ async function httpGetToursForEachMonth (req , res , next) {
   if(!tours) {
     return  next(new appError('something went wrong', 404));
   }
+  
   return res.status(200).json({
     status :'success',
     data : tours
