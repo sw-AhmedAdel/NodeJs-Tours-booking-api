@@ -1,5 +1,10 @@
 
+const appError = require('../../src/services/class.err.middleware');
 
+function handleInvalidId (err) {
+ const message = `Invalid ${err.path}: ${err.value}`;
+ return new appError(message , 400);
+}
 //i want to see error while i am dev 
 function sendErrorDev (err , res) {
   return res.status(err.statusCode).json({
@@ -34,8 +39,15 @@ function handlingErrorMiddleware (err , req , res , next)  {
 
   if( process.env.NODE_ENV === 'development' ){
     sendErrorDev(err ,res);
-   } else  if( process.env.NODE_ENV === 'production' ){
-    sendErrorProd(err ,res);
+   } 
+   else  if( process.env.NODE_ENV === 'production'  ){
+     let error = Object.assign(err); 
+  
+     if( error.name ==='CastError') {
+      error = handleInvalidId (error);
+      sendErrorProd(error ,res);
+     }
+   
    } 
 
 }
