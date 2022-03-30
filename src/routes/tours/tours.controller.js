@@ -10,9 +10,11 @@
 
 const {
   getPagination ,
-  filterFeatures
 } = require('../../services/query');
 
+const {
+  filterFeatures
+} = require('../../services/class.filters');
 
 
 
