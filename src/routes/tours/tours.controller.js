@@ -13,9 +13,22 @@ const {
 } = require('../../services/query');
 
 const filterFeatures = require('../../services/class.filters');
+const appError = require('../../services/class.err.middleware');
 
 
 
+async function httpGetOneTour (req , res , next) {
+  const id = req.params.id;
+  const tour = await findTour(id);
+  
+  if(!tour) {
+    return  next(new appError('No tour found with that id', 404));
+  }
+  return res.status(200).json({
+    status:'success',
+    data : tour,
+  })
+}
 
 async function httpGetALLTours(req , res , next) {
   const filter = {...req.query};
@@ -49,11 +62,11 @@ async function httpGetALLTours(req , res , next) {
 async function httpUpdateTour (req , res , next) {
   const id = req.params.id;
   const tour = await findTour(id);
+ 
   if(!tour) {
-    return res.status(400).json({
-      error:'tour is not find'
-    })
-  } 
+    return  next(new appError('No tour found with that id', 404));
+  }
+
    const NewTour = await UpdateTour(id , req.body);
    return res.status(200).json(NewTour);
 }
@@ -63,12 +76,11 @@ async function httpDeleteTour (req , res , next) {
  
   const id = req.params.id;
   const tour = await findTour(id);
+ 
   if(!tour) {
-    return res.status(400).json({
-      error:'tour is not find'
-    })
-  } 
-   
+    return  next(new appError('No tour found with that id', 404));
+  }
+
   await tour.remove();
   return res.status(200).json(tour);
 
@@ -76,11 +88,11 @@ async function httpDeleteTour (req , res , next) {
 
 async function httpdeleteAllData(req , res , next) {
   const data = await deleteAllData();
+  
   if(!data) {
-    return res.status(400).json({
-      error:"there is no data to delete",
-    })
+    return  next(new appError('there is no data to be deleted', 200));
   }
+
   return res.status(200).json({
     ok : true,
   })
@@ -88,10 +100,9 @@ async function httpdeleteAllData(req , res , next) {
 
 async function httpGetToursStates(req , res , next ) {
   const stats = await GetToursStates();
-  if(!stats){
-    return res.status(400).json({
-      error:'something went wrong'
-    })
+ 
+  if(!stats) {
+    return  next(new appError('something went wrong', 404));
   }
 
   return res.status(200).json({
@@ -103,12 +114,9 @@ async function httpGetToursStates(req , res , next ) {
 async function httpGetToursForEachMonth (req , res , next) {
   const year = Number(req.params.year);
   const tours = await GetToursForEachMonth(year);
-  if(!tours){
-    return res.status(400).json({
-      error:'something went wrong'
-    })
+  if(!tours) {
+    return  next(new appError('something went wrong', 404));
   }
-
   return res.status(200).json({
     status :'success',
     data : tours
@@ -117,6 +125,7 @@ async function httpGetToursForEachMonth (req , res , next) {
 
 
  module.exports = {
+   httpGetOneTour ,
    httpCreateNewTour,
    httpGetALLTours,
    httpUpdateTour,
