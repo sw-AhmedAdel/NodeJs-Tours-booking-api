@@ -6,14 +6,19 @@ const {catchAsync} = require('../../services/query');
 const {
   httpCreateUser,
   httpGetMyProfile,
+  httpUpdateUSer,
   httpLoginUser,
   httpDeleteMyAccount,
-  httpLogOut
+  httpLogOut,
+  httpLogOutAll
 } = require('./users.controllers');
 
 userRoute.post('/', catchAsync(httpCreateUser));
 userRoute.get('/my/profile' , catchAsync( auth ), catchAsync(httpGetMyProfile));
+userRoute.patch('/' , catchAsync(auth) , catchAsync(httpUpdateUSer) );
 userRoute.post('/login' , catchAsync(httpLoginUser));
 userRoute.delete('/',  catchAsync(auth) ,catchAsync(httpDeleteMyAccount));
 userRoute.get('/logout', catchAsync(auth) , catchAsync(httpLogOut) );
+userRoute.get('/logoutall', catchAsync(auth) , catchAsync(httpLogOutAll) );
+
 module.exports = userRoute;

@@ -1,6 +1,7 @@
 const {
   CreateUser,
-  findByrCedenitals
+  findByrCedenitals,
+  UpdateUSer
 } = require('../../models/users.models');
 
 const appError = require('../../services/class.err.middleware');
@@ -38,6 +39,23 @@ async function httpLoginUser (req , res , next) {
   })
 }
 
+async function httpUpdateUSer(req , res , next) {
+ 
+  const filter = {...req.body}
+  const password = filter.password;
+  const execludeFileds = ['password'];
+  execludeFileds.forEach((el) => delete filter[el]);
+  
+  req.user.password = password
+  await req.user.save();
+  const user = await UpdateUSer(req.user._id  , filter);
+
+  return res.status(200).json({
+    status:'success',
+    data: user,
+  })
+}
+
 async function httpDeleteMyAccount (req , res , next) {
   await req.user.remove();
   return res.status(200).json({
@@ -57,10 +75,25 @@ async function httpLogOut (req , res , next) {
   })
 }
 
+async function httpLogOutAll (req , res , next) {
+  const user = req.user;
+  user.tokens = undefined;
+  req.token='';
+  await user.save();
+
+  return res.status(200).json({
+    status:'success',
+    message:'you have loged out from all devices'
+  })
+}
+
+
 module.exports = {
   httpCreateUser,
+  httpUpdateUSer,
   httpGetMyProfile,
   httpLoginUser,
   httpDeleteMyAccount,
-  httpLogOut
+  httpLogOut,
+  httpLogOutAll
 }

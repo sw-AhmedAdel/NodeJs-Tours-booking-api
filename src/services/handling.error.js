@@ -7,7 +7,9 @@ function handleInvalidId (err) {
 }
 
 function handlingDuplicateDatabase  (err) {
-  const message = `${err.keyValue.name} is already exits, please use another name`;
+
+  const value = Object.values(err.keyValue);
+  const message = `${value} is already exits,`;
   return new appError(message , 400);
 }
 
