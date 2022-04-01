@@ -2,7 +2,13 @@
 const users = require('./users.mongo');
 
 async function CreateUser (newUSer) {
-  const user = new users(newUSer);
+  const user = new users({
+    name:newUSer.name,
+    email : newUSer.email,
+    password: newUSer.password,
+    passwordConfirm :newUSer.passwordConfirm,
+    photo :newUSer.photo,
+  });
   await user.save();
   return user;
 }

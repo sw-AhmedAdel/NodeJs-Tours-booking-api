@@ -27,8 +27,13 @@ async function httpGetMyProfile (req , res , next) {
   })
 }
 
+
 async function httpLoginUser (req , res , next) {
-  const user = await findByrCedenitals (req.body.email , req.body.password);
+  const {email , password} = req.body;
+  if(!email || !password) {
+    return next(new appError('please provie email and password', 400));
+  }
+  const user = await findByrCedenitals (email , password);
   if(!user) {
    return next(new appError('unable to login', 400));
   }
@@ -38,7 +43,6 @@ async function httpLoginUser (req , res , next) {
     token,
   })
 }
-
 async function httpUpdateUSer(req , res , next) {
  
   const filter = {...req.body}

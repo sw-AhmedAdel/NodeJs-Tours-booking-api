@@ -20,12 +20,19 @@ const userSchema = new mongoose.Schema({
   },
   password : {
     type:String ,
-    required: [true, 'please provide your a password'],
+    required: [true, 'please provide your  password'],
     minlength : 8,
-  },
+   },
   passwordConfirm : {
     type:String ,
-    required: [true, 'please provide your a password'],
+    required: [true, 'please provide your password'],
+    
+    validate : {
+      validator : function(val) {
+        return val === this.password;
+      },
+      message :'passwords are not the same',
+    }
   },
   tokens: [{
     token: {
@@ -38,6 +45,15 @@ const userSchema = new mongoose.Schema({
 })
 
 
+
+userSchema.methods.toJSON = function () {
+  const user =this;
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.passwordConfirm;
+  //delete userObject.tokens;
+  return userObject;
+}
 
 const secret = process.env.JWT_SECRET;
 userSchema.methods.getAuthToken = async function () {
@@ -64,11 +80,15 @@ userSchema.statics.findByrCedenitals =  async function (email , password) {
 }
 
 userSchema.pre('save' , async function(next) {
-  const user = this;
-  if(user.isModified  ('password')) {
-    user.password = await bcrypt.hash(user.password , 8 );
+   const user = this;
+   if(user.isModified('password')) {
+    user.password = await bcrypt.hash(user.password , 12 );
+    user.passwordConfirm = user.password ;
   }
+
+  next();
 })
 
+ 
 const users = mongoose.model('user' , userSchema);
 module.exports = users;

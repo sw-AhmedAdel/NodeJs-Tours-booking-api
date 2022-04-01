@@ -13,7 +13,7 @@ const {
   httpLogOutAll
 } = require('./users.controllers');
 
-userRoute.post('/', catchAsync(httpCreateUser));
+userRoute.post('/signup', catchAsync(httpCreateUser));
 userRoute.get('/my/profile' , catchAsync( auth ), catchAsync(httpGetMyProfile));
 userRoute.patch('/' , catchAsync(auth) , catchAsync(httpUpdateUSer) );
 userRoute.post('/login' , catchAsync(httpLoginUser));
