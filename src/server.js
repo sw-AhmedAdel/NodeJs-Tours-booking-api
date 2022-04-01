@@ -15,10 +15,12 @@ const server = http.createServer(app);
 const {startMongo} = require('./services/mongo');
 const {loadAlltours} = require('../src/models/tours.model');
 
+const users = require('../src/models/users.mongo');
 
 async function startServer() { 
   await startMongo();
   await loadAlltours();
+  //await users.deleteMany()
   server.listen(PORT , () => {
     console.log('server is running');
   })

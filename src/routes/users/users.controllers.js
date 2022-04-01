@@ -38,8 +38,29 @@ async function httpLoginUser (req , res , next) {
   })
 }
 
+async function httpDeleteMyAccount (req , res , next) {
+  await req.user.remove();
+  return res.status(200).json({
+    status:'success',
+    message:'your account has been deleted'
+  })
+}
+
+async function httpLogOut (req , res , next) {
+  const user = req.user;
+  user.tokens = user.tokens.filter((token) => req.token !== token.token);
+  await user.save();
+
+  return res.status(200).json({
+    status:'success',
+    message:'you have loged out'
+  })
+}
+
 module.exports = {
   httpCreateUser,
   httpGetMyProfile,
-  httpLoginUser
+  httpLoginUser,
+  httpDeleteMyAccount,
+  httpLogOut
 }
