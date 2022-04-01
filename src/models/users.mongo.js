@@ -48,8 +48,10 @@ userSchema.methods.getAuthToken = async function () {
   return token;
 }
 
-userSchema.statics.findByrCedenitals =  await function (email , password) {
-  const user = await users.findOne(email);
+userSchema.statics.findByrCedenitals =  async function (email , password) {
+  const user = await users.findOne({
+    email
+  });
   if(!user) {
     return false;
   }

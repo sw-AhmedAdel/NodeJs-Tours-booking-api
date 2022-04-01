@@ -7,7 +7,11 @@ async function CreateUser (newUSer) {
   return user;
 }
 
+async function findByrCedenitals(email , password) {
+  return await users.findByrCedenitals(email , password);
+}
 
 module.exports = {
-  CreateUser
+  CreateUser,
+  findByrCedenitals
 }

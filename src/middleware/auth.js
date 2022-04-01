@@ -12,7 +12,7 @@ async function auth (req , res , next ) {
      'tokens.token': token,
    })
    if(!user) {
-     return new appError('please authenticate' , 401);
+     return next( new appError('please authenticate' , 401));
    }
 
    req.user = user;
