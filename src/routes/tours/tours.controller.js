@@ -82,7 +82,10 @@ async function httpDeleteTour (req , res , next) {
   }
 
   await tour.remove();
-  return res.status(200).json(tour);
+  return res.status(200).json({
+    status:'success',
+    data : tour,
+  });
 
 }
 
