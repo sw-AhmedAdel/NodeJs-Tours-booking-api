@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt =require('bcrypt');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+ require('dotenv').config();
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -34,16 +34,34 @@ const userSchema = new mongoose.Schema({
       message :'passwords are not the same',
     }
   },
-  tokens: [{
+ passwordCreatedAt : Date,
+
+  /*tokens: [{
     token: {
       type: String,
       required: true,
     },
-  }]
+  }]*/
 }, {
   timestamps : true,
 })
 
+
+
+userSchema.methods.changePasswordAfter =  function(jwtTime) {
+ 
+  if(this.passwordCreatedAt) {
+   const changePasswordTime = parseInt(this.passwordCreatedAt.getTime() / 1000 , 10);
+
+   return jwtTime < changePasswordTime
+  }
+  return false;
+}
+/* 1 when i use the cookie to store the token, first check if token is verify   
+ 2- when i get the decoded i need to check if the user still exits in the database or he deleted his account 
+ 3- if user exits i want to make sure he did not change the password coz it related to the token
+ so i need to give him new token 
+*/ 
 
 
 userSchema.methods.toJSON = function () {
@@ -59,7 +77,7 @@ const secret = process.env.JWT_SECRET;
 userSchema.methods.getAuthToken = async function () {
   const user = this;
   const token = jwt.sign( {_id : user._id.toString()} , secret , {expiresIn:'7 days'} );
-  user.tokens.push({token});
+//  user.tokens.push({token});
   await user.save();
   return token;
 }

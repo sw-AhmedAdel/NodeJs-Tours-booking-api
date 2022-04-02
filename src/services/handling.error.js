@@ -19,6 +19,16 @@ function handleMongoosError (err) {
   return new appError(message , 400);
 }
 
+function handelJwtExpired () {//change expired to 5s
+  const message = 'your token has been expired, please login again';
+  return new appError(message , 401);
+}
+
+function handelInvalidToken() {//to test that make auth in postman bearertoken and put any token 
+  const message = 'Invalid token, please login again';
+  return new appError(message , 401);
+}
+
 //i want to see error while i am dev 
 function sendErrorDev (err , res) {
   return res.status(err.statusCode).json({
@@ -29,6 +39,7 @@ function sendErrorDev (err , res) {
   })
 }
  
+
 // limit the erro and make it more readable to the user 
 function sendErrorProd (err , res) {
   //isOperational means there is an error happend i tracked it using appError
@@ -67,7 +78,13 @@ function handlingErrorMiddleware (err , req , res , next)  {
     if(error.name === "ValidationError") {
       error = handleMongoosError (error)
     }
-    
+    if(error.name ==='TokenExpiredError') {
+      error = handelJwtExpired ()
+    }
+
+    if(error.name ==='JsonWebTokenError') {
+      error = handelInvalidToken();
+    }
     sendErrorProd(error, res);    
    } 
 }

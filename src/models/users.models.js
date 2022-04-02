@@ -8,6 +8,7 @@ async function CreateUser (newUSer) {
     password: newUSer.password,
     passwordConfirm :newUSer.passwordConfirm,
     photo :newUSer.photo,
+    passwordCreatedAt:newUSer.passwordCreatedAt
   });
   await user.save();
   return user;

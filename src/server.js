@@ -20,7 +20,7 @@ const users = require('../src/models/users.mongo');
 async function startServer() { 
   await startMongo();
   await loadAlltours();
-  //await users.deleteMany()
+  await users.deleteMany()
   server.listen(PORT , () => {
     console.log('server is running');
   })
