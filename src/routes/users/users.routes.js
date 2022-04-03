@@ -14,7 +14,7 @@ const {
 } = require('./users.controllers');
 
 const {
-  forgetPassword,
+  forgotPassword,
 } = require('../../password/password');
 
 
@@ -26,6 +26,6 @@ userRoute.post('/login' , catchAsync(httpLoginUser));
 userRoute.delete('/',  catchAsync(auth) ,catchAsync(httpDeleteMyAccount));
 userRoute.get('/logout', catchAsync(auth) , catchAsync(httpLogOut) );
 userRoute.get('/logoutall', catchAsync(auth) , catchAsync(httpLogOutAll) );
-userRoute.post('/forgetpassword' ,  catchAsync(forgetPassword));
+userRoute.post('/forgotpassword' ,  catchAsync(forgotPassword));
 
 module.exports = userRoute;
