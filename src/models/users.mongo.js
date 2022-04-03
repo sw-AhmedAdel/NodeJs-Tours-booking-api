@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt =require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
  require('dotenv').config();
 
 const userSchema = new mongoose.Schema({
@@ -41,7 +42,8 @@ const userSchema = new mongoose.Schema({
     }
   },
  passwordCreatedAt : Date,
-
+ passwordResetToken : String ,
+ passwordResetExpires : Date,
   /*tokens: [{
     token: {
       type: String,
@@ -52,6 +54,13 @@ const userSchema = new mongoose.Schema({
   timestamps : true,
 })
 
+
+userSchema.methods.createPasswordResetToken = function(){
+ const newToken = crypto.randomBytes(32).toString('hex');
+ this.passwordResetToken = crypto.createHash('sha256').update(newToken).digest('hex');
+ this.passwordResetExpires = Date.now() + 10 * 60 *1000; //10mins
+ return newToken;
+}
 
 
 userSchema.methods.changePasswordAfter =  function(jwtTime) {
@@ -80,11 +89,11 @@ userSchema.methods.toJSON = function () {
 }
 
 const secret = process.env.JWT_SECRET;
-userSchema.methods.getAuthToken = async function () {
+userSchema.methods.getAuthToken =  function () {
   const user = this;
   const token = jwt.sign( {_id : user._id.toString()} , secret , {expiresIn:'7 days'} );
 //  user.tokens.push({token});
-  await user.save();
+ // await user.save();
   return token;
 }
 

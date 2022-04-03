@@ -22,10 +22,6 @@ const {
 const auth = require('../../middleware/auth');
 const admim = require('../../middleware/admin');
 
-toursRoutes.get('/top-tours'  , getTopTours ,catchAsync( httpGetALLTours));// use it to get this ?limit=5&sort=price,ratingsAverage
-toursRoutes.get('/tours.stats' ,catchAsync( httpGetToursStates));
-toursRoutes.get('/monthly.plan/:year' ,catchAsync(auth) ,catchAsync( httpGetToursForEachMonth));
-
  toursRoutes.get('/:id' , catchAsync(httpGetOneTour));
  toursRoutes.get('/', catchAsync(auth) ,catchAsync( httpGetALLTours));
  toursRoutes.post('/' , catchAsync( httpCreateNewTour));
@@ -34,6 +30,8 @@ toursRoutes.get('/monthly.plan/:year' ,catchAsync(auth) ,catchAsync( httpGetTour
  toursRoutes.delete('/',catchAsync( httpdeleteAllData))
 
 
-
+ toursRoutes.get('/top/tours'  , getTopTours ,catchAsync( httpGetALLTours));// use it to get this ?limit=5&sort=price,ratingsAverage
+ toursRoutes.get('/tours/stats' ,catchAsync( httpGetToursStates));
+ toursRoutes.get('/monthly.plan/:year' ,catchAsync(auth) ,catchAsync( httpGetToursForEachMonth));
 
  module.exports = toursRoutes;

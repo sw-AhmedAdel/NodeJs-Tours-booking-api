@@ -13,6 +13,12 @@ const {
   httpLogOutAll
 } = require('./users.controllers');
 
+const {
+  forgetPassword,
+} = require('../../password/password');
+
+
+
 userRoute.post('/signup', catchAsync(httpCreateUser));
 userRoute.get('/my/profile' , catchAsync( auth ), catchAsync(httpGetMyProfile));
 userRoute.patch('/' , catchAsync(auth) , catchAsync(httpUpdateUSer) );
@@ -20,5 +26,6 @@ userRoute.post('/login' , catchAsync(httpLoginUser));
 userRoute.delete('/',  catchAsync(auth) ,catchAsync(httpDeleteMyAccount));
 userRoute.get('/logout', catchAsync(auth) , catchAsync(httpLogOut) );
 userRoute.get('/logoutall', catchAsync(auth) , catchAsync(httpLogOutAll) );
+userRoute.post('/forgetpassword' ,  catchAsync(forgetPassword));
 
 module.exports = userRoute;
