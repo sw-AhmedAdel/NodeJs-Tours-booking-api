@@ -15,6 +15,7 @@ const {
 
 const {
   forgotPassword,
+  resetPassword
 } = require('../../password/password');
 
 
@@ -27,5 +28,6 @@ userRoute.delete('/',  catchAsync(auth) ,catchAsync(httpDeleteMyAccount));
 userRoute.get('/logout', catchAsync(auth) , catchAsync(httpLogOut) );
 userRoute.get('/logoutall', catchAsync(auth) , catchAsync(httpLogOutAll) );
 userRoute.post('/forgotpassword' ,  catchAsync(forgotPassword));
+userRoute.patch('/resetpassword/:token' , catchAsync(resetPassword) );
 
 module.exports = userRoute;

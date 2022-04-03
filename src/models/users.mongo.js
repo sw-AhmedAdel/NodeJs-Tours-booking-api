@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
       message :'passwords are not the same',
     }
   },
- passwordCreatedAt : Date,
+  passwordChangedAt : Date,
  passwordResetToken : String ,
  passwordResetExpires : Date,
   /*tokens: [{
@@ -66,13 +66,22 @@ const user = this;
 }
 
 
-userSchema.methods.changePasswordAfter =  function(jwtTime) {
- 
-  if(this.passwordCreatedAt) {
-   const changePasswordTime = parseInt(this.passwordCreatedAt.getTime() / 1000 , 10);
+userSchema.pre('save' ,   function(next) {
+  
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000; 
 
-   return jwtTime < changePasswordTime
+   next();
+})
+
+userSchema.methods.changePasswordAfter =  function(JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt( this.passwordChangedAt.getTime() / 1000,  10 );
+ 
+    return JWTTimestamp < changedTimestamp;
   }
+
+  // False means NOT changed
   return false;
 }
 /* 1 when i use the cookie to store the token, first check if token is verify   

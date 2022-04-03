@@ -11,6 +11,7 @@ async function auth (req , res , next ) {
    if(!token) {
     return next(new appError('you are not loged in, please log in to have access', 401))
    }
+
    const decoded = await promisify( jwt.verify)(token , secret );
    const user = await users.findOne({
      _id : decoded._id,
