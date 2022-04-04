@@ -4,6 +4,10 @@ const {
   UpdateUSer
 } = require('../../models/users.models');
 
+const {
+  fliterObject
+}  = require('../../services/query');
+
 const appError = require('../../services/class.err.middleware');
 
 async function httpCreateUser(req , res , next) {
@@ -45,13 +49,10 @@ async function httpLoginUser (req , res , next) {
 }
 async function httpUpdateUSer(req , res , next) {
  
-  const filter = {...req.body}
-  const password = filter.password;
-  const execludeFileds = ['password'];
-  execludeFileds.forEach((el) => delete filter[el]);
-  
-  req.user.password = password
-  await req.user.save();
+  if(req.body.password || req.body.passwordConfirm){
+    return next(new appError('This route is not for password update, please use /updatepassword', 400));
+  }
+  const filter = fliterObject(req.body , 'name', 'email')
   const user = await UpdateUSer(req.user._id  , filter);
 
   return res.status(200).json({
@@ -79,17 +80,7 @@ async function httpLogOut (req , res , next) {
   })
 }
 
-async function httpLogOutAll (req , res , next) {
-  const user = req.user;
-  user.tokens = undefined;
-  req.token='';
-  await user.save();
 
-  return res.status(200).json({
-    status:'success',
-    message:'you have loged out from all devices'
-  })
-}
 
 
 module.exports = {
@@ -99,5 +90,5 @@ module.exports = {
   httpLoginUser,
   httpDeleteMyAccount,
   httpLogOut,
-  httpLogOutAll
+  
 }

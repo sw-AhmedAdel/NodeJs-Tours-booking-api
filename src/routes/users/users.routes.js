@@ -10,7 +10,7 @@ const {
   httpLoginUser,
   httpDeleteMyAccount,
   httpLogOut,
-  httpLogOutAll
+  
 } = require('./users.controllers');
 
 const {
@@ -23,11 +23,11 @@ const {
 
 userRoute.post('/signup', catchAsync(httpCreateUser));
 userRoute.get('/my/profile' , catchAsync( auth ), catchAsync(httpGetMyProfile));
-userRoute.patch('/' , catchAsync(auth) , catchAsync(httpUpdateUSer) );
+userRoute.patch('/updateme' , catchAsync(auth) , catchAsync(httpUpdateUSer) );
 userRoute.post('/login' , catchAsync(httpLoginUser));
 userRoute.delete('/',  catchAsync(auth) ,catchAsync(httpDeleteMyAccount));
 userRoute.get('/logout', catchAsync(auth) , catchAsync(httpLogOut) );
-userRoute.get('/logoutall', catchAsync(auth) , catchAsync(httpLogOutAll) );
+
 userRoute.post('/forgotpassword' ,  catchAsync(forgotPassword));
 userRoute.patch('/resetpassword/:token' , catchAsync(resetPassword) );
 userRoute.patch('/updatepassword',  catchAsync( auth ), catchAsync(updatePassword)  )
