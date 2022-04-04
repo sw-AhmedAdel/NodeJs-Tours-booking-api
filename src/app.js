@@ -7,7 +7,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
-
+const hpp = require('hpp');
 
 const limiter = rateLimit({
   max: 100 ,
@@ -27,6 +27,10 @@ app.use(mongoSanitize());
 
 //Using this middleware, we prevent that basically by converting all these HTML symbols.
 app.use(xss());
+//this will filter the qeury to dublicate only these values
+app.use(hpp({
+  whitelist:['difficulty','price','duration','maxGroupSize','ratingsQuantity','ratingsAverage']
+}))
 app.use("/v1", api);
 
 app.all("*", (req, res , next) => {
