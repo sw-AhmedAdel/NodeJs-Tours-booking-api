@@ -4,13 +4,14 @@ const api = require("./routes/api");
 const appError = require('../src/services/class.err.middleware');
 const {handlingErrorMiddleware} = require('../src/services/handling.error');
 const rateLimit = require('express-rate-limit');
-
+const helmet = require('helmet');
 const limiter = rateLimit({
   max: 100 ,
   windowMs: 60 * 60 * 1000, // 1 hour
   message:'To many requests from this api/ please try again an hour'
 })
 app.use(limiter)
+app.use(helmet());
 app.use(express.json());
 app.use("/v1", api);
 
