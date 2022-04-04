@@ -10,6 +10,8 @@ const {
   fliterObject
 }  = require('../../services/query');
 
+const sendTokenViaCookie = require('../../services/cookie');
+
 const appError = require('../../services/class.err.middleware');
 
 async function httpGetAllUsers(req ,res , next) {
@@ -20,6 +22,7 @@ async function httpCreateUser(req , res , next) {
    const user_info = req.body;
    const user = await CreateUser(user_info);
    const token = await user.getAuthToken();
+   sendTokenViaCookie(token , res)
    return res.status(201).json({
      user,
      token,
@@ -48,6 +51,7 @@ async function httpLoginUser (req , res , next) {
    return next(new appError('unable to login', 400));
   }
   const token = await user.getAuthToken();
+  sendTokenViaCookie(token , res)
   return res.status(201).json({
     user,
     token,

@@ -108,7 +108,7 @@ userSchema.methods.toJSON = function () {
 const secret = process.env.JWT_SECRET;
 userSchema.methods.getAuthToken =  function () {
   const user = this;
-  const token = jwt.sign( {_id : user._id.toString()} , secret , {expiresIn:'7 days'} );
+  const token = jwt.sign( {_id : user._id.toString()} , secret , {expiresIn : process.env.EXPIRED_JWT} );
 //  user.tokens.push({token});
  // await user.save();
   return token;

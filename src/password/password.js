@@ -3,7 +3,8 @@ const users = require('../models/users.mongo');
 const appError = require('../services/class.err.middleware');
 const sendEmail = require('../services/emails');
 const crypto  = require('crypto');
-const bcrypt = require('bcrypt');
+const  sendTokenViaCookie = require('../services/cookie');
+
 async function forgotPassword (req , res , next) {
   if(!req.body.email) {
     return next(new appError('please provide your emai' , 400));
@@ -65,6 +66,7 @@ async function resetPassword (req , res , next) {
  //so user can not make any action and he need to log in again  so when i create passwordCreatedAt i add -1sec so i 
  //make user storing passwordCreatedAt in db will happen first  
  const token =  user.getAuthToken();
+ sendTokenViaCookie(token , res)
   return res.status(200).json({
     status:'success',
     token
@@ -87,7 +89,7 @@ async function updatePassword (req , res , next) {
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
   const token = user.getAuthToken();
-
+  sendTokenViaCookie(token , res);
   return res.status(200).json({
     status:'success',
     token
