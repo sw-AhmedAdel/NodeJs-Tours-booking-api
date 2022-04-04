@@ -3,6 +3,7 @@ const users = require('../models/users.mongo');
 const appError = require('../services/class.err.middleware');
 const sendEmail = require('../services/emails');
 const crypto  = require('crypto');
+const bcrypt = require('bcrypt');
 async function forgotPassword (req , res , next) {
   if(!req.body.email) {
     return next(new appError('please provide your emai' , 400));
@@ -70,7 +71,31 @@ async function resetPassword (req , res , next) {
   })
 }
 
+
+async function updatePassword (req , res , next) {
+
+
+  const user = await users.findById(req.user._id)
+  if(!await user.comparePassword(req.body.currentpassword , user.password)){
+    return next (new appError('Your current password is wrong', 401));// unauthorized
+  }
+  if(!req.body.password || !req.body.passwordConfirm){
+    return next(new appError('new password and passwordConfirm are required', 400));
+  }
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  const token = user.getAuthToken();
+
+  return res.status(200).json({
+    status:'success',
+    token
+  })
+
+}
 module.exports = { 
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updatePassword 
 }

@@ -109,6 +109,10 @@ userSchema.methods.getAuthToken =  function () {
   return token;
 }
 
+userSchema.methods.comparePassword = async function (candidatePassword , userPassword) {
+  return await bcrypt.compare(candidatePassword , userPassword);
+}
+
 userSchema.statics.findByrCedenitals =  async function (email , password) {
   const user = await users.findOne({
     email

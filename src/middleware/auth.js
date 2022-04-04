@@ -6,8 +6,8 @@ const secret = process.env.JWT_SECRET;
 const appError = require('../services/class.err.middleware');
 
 async function auth (req , res , next ) {
+   
    const token = req.header('Authorization').replace('Bearer ', '');
-
    if(!token) {
     return next(new appError('you are not loged in, please log in to have access', 401))
    }
@@ -25,7 +25,8 @@ async function auth (req , res , next ) {
     return next(new appError('user recently changed password, please login again', 401))
    }
  
-    
+  
+
    req.user = user;
    req.token = token;
    next();

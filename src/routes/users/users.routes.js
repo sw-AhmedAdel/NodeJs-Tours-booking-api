@@ -15,7 +15,8 @@ const {
 
 const {
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updatePassword
 } = require('../../password/password');
 
 
@@ -29,5 +30,6 @@ userRoute.get('/logout', catchAsync(auth) , catchAsync(httpLogOut) );
 userRoute.get('/logoutall', catchAsync(auth) , catchAsync(httpLogOutAll) );
 userRoute.post('/forgotpassword' ,  catchAsync(forgotPassword));
 userRoute.patch('/resetpassword/:token' , catchAsync(resetPassword) );
+userRoute.patch('/updatepassword',  catchAsync( auth ), catchAsync(updatePassword)  )
 
 module.exports = userRoute;

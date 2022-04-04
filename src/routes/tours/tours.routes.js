@@ -30,8 +30,8 @@ const admim = require('../../middleware/admin');
  toursRoutes.delete('/',catchAsync( httpdeleteAllData))
 
 
- toursRoutes.get('/top/tours'  , getTopTours ,catchAsync( httpGetALLTours));// use it to get this ?limit=5&sort=price,ratingsAverage
- toursRoutes.get('/tours/stats' ,catchAsync( httpGetToursStates));
+ toursRoutes.get('/top/tours'  , getTopTours ,catchAsync(auth)  ,catchAsync( httpGetALLTours));// use it to get this ?limit=5&sort=price,ratingsAverage
+ toursRoutes.get('/tours/stats' ,catchAsync(auth)  ,catchAsync( httpGetToursStates));
  toursRoutes.get('/monthly.plan/:year' ,catchAsync(auth) ,catchAsync( httpGetToursForEachMonth));
 
  module.exports = toursRoutes;
