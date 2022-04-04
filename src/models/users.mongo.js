@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema({
    enum: ['user' , 'guide','lead-guide', 'admin'],
    default:'user'
   },
+  active: {
+    type: Boolean,
+    default: true,
+  }
+  ,
   email : {
     type : String ,
     required :[true , 'please provide your email'],
@@ -135,6 +140,13 @@ userSchema.pre('save' , async function(next) {
     user.passwordConfirm = user.password ;
   }
 
+  next();
+})
+
+//when the user try to use his account this will not work coz in auth function i use findone so 
+//his account will not show coz i am using this middlware
+userSchema.pre(/^find/ , function(next){
+  this.find({active : {$ne : false}});//this for delete user account
   next();
 })
 

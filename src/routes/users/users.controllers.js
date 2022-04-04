@@ -1,7 +1,9 @@
 const {
   CreateUser,
   findByrCedenitals,
-  UpdateUSer
+  UpdateUSer,
+  GetAllUsers,
+  DeleteUser
 } = require('../../models/users.models');
 
 const {
@@ -9,6 +11,10 @@ const {
 }  = require('../../services/query');
 
 const appError = require('../../services/class.err.middleware');
+
+async function httpGetAllUsers(req ,res , next) {
+  return res.status(200).json(await GetAllUsers());
+}
 
 async function httpCreateUser(req , res , next) {
    const user_info = req.body;
@@ -62,7 +68,7 @@ async function httpUpdateUSer(req , res , next) {
 }
 
 async function httpDeleteMyAccount (req , res , next) {
-  await req.user.remove();
+  await DeleteUser(req.user._id);
   return res.status(200).json({
     status:'success',
     message:'your account has been deleted'
@@ -84,6 +90,7 @@ async function httpLogOut (req , res , next) {
 
 
 module.exports = {
+  httpGetAllUsers,
   httpCreateUser,
   httpUpdateUSer,
   httpGetMyProfile,

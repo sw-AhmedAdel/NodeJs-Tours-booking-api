@@ -1,6 +1,10 @@
 
 const users = require('./users.mongo');
 
+async function GetAllUsers () {
+  return await users.find();
+}
+
 async function CreateUser (newUSer) {
   const user = new users(newUSer);
   await user.save();
@@ -19,8 +23,16 @@ async function UpdateUSer (id , editUser) {
   return user;
 }
 
+async function DeleteUser (id) {
+  await users.findByIdAndUpdate(id , {
+    active: false,
+  })
+}
+
 module.exports = {
   CreateUser,
   findByrCedenitals,
-  UpdateUSer
+  UpdateUSer,
+  GetAllUsers,
+  DeleteUser
 }
