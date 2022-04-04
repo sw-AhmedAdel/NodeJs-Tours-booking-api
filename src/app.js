@@ -27,7 +27,10 @@ app.use(mongoSanitize());
 
 //Using this middleware, we prevent that basically by converting all these HTML symbols.
 app.use(xss());
-//this will filter the qeury to dublicate only these values
+//using these to remove the dublicate query like  if i used sort twice like sort=price$sort=price
+//here i will get error coz i get values form sort using split and it works on string but getting 2 sort
+//this will put them in array so i get error coz split does not work in array so hpp to take the last sort
+//and use whitelist to allows dublicate coz these are not use split 
 app.use(hpp({
   whitelist:['difficulty','price','duration','maxGroupSize','ratingsQuantity','ratingsAverage']
 }))
