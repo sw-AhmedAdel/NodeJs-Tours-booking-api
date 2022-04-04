@@ -3,13 +3,16 @@ const app = express();
 const api = require("./routes/api");
 const appError = require('../src/services/class.err.middleware');
 const {handlingErrorMiddleware} = require('../src/services/handling.error');
+const rateLimit = require('express-rate-limit');
 
+const limiter = rateLimit({
+  max: 100 ,
+  windowMs: 60 * 60 * 1000, // 1 hour
+  message:'To many requests from this api/ please try again an hour'
+})
+app.use(limiter)
 app.use(express.json());
-
-
-
 app.use("/v1", api);
-
 
 app.all("*", (req, res , next) => {
 
