@@ -71,7 +71,37 @@ const toursSchema = new mongoose.Schema({
   
   startDates : {
     type : [Date],
+  },
+  startLocation: {
+    type :{
+      type: String,
+      default:'Point',
+       enum:{
+         values: ['Point'],
+         message:' value must be Point'
+       },
+    },
+    coordinates :[Number],
+    address:String,
+    description:String,
   }
+  ,
+  locations :[
+    {
+      type :{
+        type: String,
+        default:'Point',
+        enum:{
+          values: ['Point'],
+          message:' value must be Point'
+        },
+      },
+      coordinates :[Number],
+      address:String,
+      description:String,
+      day: Number,
+    }
+  ]
 
 }, {
   timestamps: true,
@@ -86,6 +116,7 @@ createdAt : {
   select : false >> means do not show it to users
 }
 */ 
+
 
 toursSchema.virtual('durationWeeks').get(function(){
   return this.duration / 7;
@@ -126,6 +157,7 @@ toursSchema.pre('aggregate', function(next) {
   //pipelin is array has all object that i get using aggregate on grouping so in this array remove the tour using unshift
   //this.pipeline().unshift({ $match : { price: { $ne :1497}  } })
   next();
+
 })
 
 const tours = mongoose.model('Tour' , toursSchema);

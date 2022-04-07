@@ -4,7 +4,7 @@ const path = require('path');
 
 // read tours from the file 
 async function readTours () {
-  const allTours = JSON.parse( fs.readFileSync(path.join(__dirname,'..','..','data','tours-simple.json')));
+  const allTours = JSON.parse( fs.readFileSync(path.join(__dirname,'..','..','data','tours.json')));
   for(const tour of allTours) {
     await CreateNewTour(tour);
   }
@@ -32,7 +32,8 @@ async function  GetALLTours (filter  , skip , limit , sortBy , fields) {
   .skip(skip)
   .limit(limit)
   .sort(sortBy)
- 
+  .select(fields)
+
   
 } 
 

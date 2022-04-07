@@ -1,7 +1,7 @@
 
 const appError = require('../../src/services/class.err.middleware');
 
-function handleInvalidId (err) {
+function handleInvalidId (err) { // invalid id 
  const message = `Invalid ${err.path}: ${err.value}`;
  return new appError(message , 400);
 }
@@ -13,7 +13,7 @@ function handlingDuplicateDatabase  (err) {
   return new appError(message , 400);
 }
 
-function handleMongoosError (err) {
+function handleMongoosError (err) {//errir i set in required [true, 'error her ' ]
   const errors = Object.values(err.errors).map(el => el.message);
   const message = `Invalid input data ${errors.join('. ')}`;
   return new appError(message , 400);
@@ -68,14 +68,14 @@ function handlingErrorMiddleware (err , req , res , next)  {
    else  if( process.env.NODE_ENV === 'production'  ){
      let error = Object.assign(err); 
   
-     if( error.name ==='CastError') {
+     if( error.name ==='CastError') {// invalid id
       error = handleInvalidId (error);
      }
-     if(error.code === 11000) {
+     if(error.code === 11000) {// dublicate like emails
       error = handlingDuplicateDatabase(error);
     }
 
-    if(error.name === "ValidationError") {
+    if(error.name === "ValidationError") {// erros in the mongo
       error = handleMongoosError (error)
     }
     if(error.name ==='TokenExpiredError') {
@@ -92,3 +92,5 @@ function handlingErrorMiddleware (err , req , res , next)  {
 module.exports = {
   handlingErrorMiddleware,
 };
+
+ 

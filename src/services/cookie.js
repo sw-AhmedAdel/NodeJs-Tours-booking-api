@@ -7,7 +7,7 @@ function sendTokenViaCookie ( token , res) {
    httpOnly: true,//can not be accessed or modyfied by the borwser
   }
   if(process.env.NODE_ENV === 'production') {
-    tokenOptions.secure = true; // means will only send in encrypted coneections which is https
+    cookieOptions.secure = true; // means will only send in encrypted coneections which is https
   }
   res.cookie('jwt' , token , cookieOptions);
 }
