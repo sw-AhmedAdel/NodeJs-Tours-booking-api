@@ -26,7 +26,7 @@ async function httpGetOneTour (req , res , next) {
   }
   return res.status(200).json({
     status:'success',
-  
+    data : tour
   })
 }
 
@@ -43,6 +43,7 @@ async function httpGetALLTours(req , res , next) {
   const fields =features.filterFileds();
  
  const tours = await GetALLTours(finalFilter , skip , limit , sortBy , fields)
+ 
   return res.status(200).json({
     success:true,
     results: tours.length,
@@ -54,8 +55,8 @@ async function httpGetALLTours(req , res , next) {
 
   async function  httpCreateNewTour  (req , res , next)  {
    const tour = req.body;
-   await CreateNewTour(tour);
-   return res.status(201).json(tour);
+   const NewTour= await CreateNewTour(tour);
+   return res.status(201).json(NewTour);
 
  }
 

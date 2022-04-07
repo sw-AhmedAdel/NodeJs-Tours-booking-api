@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
- 
+//const users = require('./users.mongo'); used to embeded
+
 const toursSchema = new mongoose.Schema({
   name :{
     type: String,
@@ -100,10 +101,17 @@ const toursSchema = new mongoose.Schema({
       address:String,
       description:String,
       day: Number,
-    }
-  ]
-
-}, {
+    },
+  ],
+ // guides: Array, used for embeded
+ guides : [
+   {
+     type: mongoose.Schema.Types.ObjectId,
+     ref:'user',// here stor user id as a ref 
+   }
+ ]
+ } ,
+  {
   timestamps: true,
   toJSON : {virtuals : true},
   toObject : {virtuals : true}
@@ -124,6 +132,17 @@ toursSchema.virtual('durationWeeks').get(function(){
 })
 
 
+//using embeded to add user to tour model  by adding there id in  guides filed
+//and use save to get there data but it is not goog approcah coz if i want to update the user like email
+//i need to check if this user is in a tour ? if it yes so update the data in this tour so this is a lot of work
+// and use ref it best approcah
+/*toursSchema.pre('save' , async function (next) {
+  const guidesPromisify = this.guides.map( async (id) =>  await users.findById(id));//this will return promise for each result
+  this.guides = await Promise.all(guidesPromisify);
+  next();
+})
+*/
+
 // use middleware to modify the data before saving it in mongo
 toursSchema.pre('save', function(next) {
   this.start = Date.now();
@@ -141,6 +160,11 @@ toursSchema.post('save', function(doc, next){
 toursSchema.pre(/^find/ , function( next) {
  // this.find( { price: { $ne :1497} } )
   //means if i want to get all tours but there are many secret tours for vip customers use this midlleware 
+  
+  this.populate({
+    path:'guides',
+    select:'-__v'
+  })
   next();
 })
 

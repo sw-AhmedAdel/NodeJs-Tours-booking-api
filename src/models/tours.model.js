@@ -42,13 +42,17 @@ async function CreateNewTour (tour) {
 
   const NewTour = await tours(tour);
   await NewTour.save();
+  return NewTour;
    
 }
 
 async function findTour (id ){
   return await tours.findOne({
     _id : id
-  })
+  },)/*.populate({
+    path:'guides',
+    select:'-__v'
+  }) i can use find middleware to apply it for the all find */
 }
 
 async function UpdateTour (id , tour) {
