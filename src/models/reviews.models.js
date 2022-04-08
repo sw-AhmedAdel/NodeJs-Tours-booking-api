@@ -21,10 +21,20 @@ async function CreateReview (reviewBody , user_id , tour_id ) {
    return newReview;
 }
 
+async function UpdateReview(review , id) {
+    const newReview = await reviews.findByIdAndUpdate(id , review , {
+    new:true,
+    runValidators:true,
+  })
+  return newReview
+}
+
 
  
 module.exports = {
   GetAllReviews,
   CreateReview,
   FindTour,
+  UpdateReview
  }
+ 
