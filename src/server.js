@@ -13,17 +13,21 @@ process.on('uncaughtExceptions' , err=> {
 const server = http.createServer(app);
 
 const {startMongo} = require('./services/mongo');
-const {loadAlltours} = require('../src/models/tours.model');
+const {
+  loadAllData ,
+  DeleteAllData
+} = require('./import.data/import.data');
 
-const users = require('../src/models/users.mongo');
-const tours = require('../src/models/tours.mongo')
-const reviews = require('../src/models/reviews.mongo');
+
 async function startServer() { 
   await startMongo();
-  //await tours.deleteMany()
- //await reviews.deleteMany()
-  await loadAlltours();
-  //await users.deleteMany()
+   
+ if(process.argv[2] ==='d') {
+   await DeleteAllData();
+ }
+
+  await loadAllData();
+ 
   server.listen(PORT , () => {
     console.log('server is running');
   })

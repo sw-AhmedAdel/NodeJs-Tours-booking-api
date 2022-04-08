@@ -1,28 +1,6 @@
 const tours = require('./tours.mongo');
-const fs = require('fs');
-const path = require('path');
 
-// read tours from the file 
-async function readTours () {
-  const allTours = JSON.parse( fs.readFileSync(path.join(__dirname,'..','..','data','tours.json')));
-  for(const tour of allTours) {
-    await CreateNewTour(tour);
-  }
-}
 
-//load all tours 
-async function loadAlltours () {
-  const firstTour = await  tours.findOne({
-    name: "The Forest Hiker",
-  })
-  if(firstTour) {
-    console.log('all data already exits')
-  }
-  else {
-    console.log('inserting all tours');
-   await readTours();
-  }
-}
 
 //get all tours
 async function  GetALLTours (filter  , skip , limit , sortBy , fields) {
@@ -167,7 +145,6 @@ module.exports = {
   findTour,
   UpdateTour,
   deleteAllData,
-  loadAlltours,
   GetToursStates,
   GetToursForEachMonth
 }
