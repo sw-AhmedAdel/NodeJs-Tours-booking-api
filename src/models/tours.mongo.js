@@ -184,6 +184,6 @@ toursSchema.pre('aggregate', function(next) {
 
 })
 
-const tours = mongoose.model('Tour' , toursSchema);
+const tours = mongoose.model('tour' , toursSchema);
 module.exports = tours;
 

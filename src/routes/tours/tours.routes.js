@@ -20,13 +20,13 @@ const {
 } = require('../../services/query')
 
 const auth = require('../../middleware/auth');
-const admin = require('../../middleware/admin');
+const restrictTo = require('../../middleware/admin');
 
  toursRoutes.get('/:id' , catchAsync(httpGetOneTour));
  toursRoutes.get('/', catchAsync(auth) ,catchAsync( httpGetALLTours));
  toursRoutes.post('/' , catchAsync( httpCreateNewTour));
  toursRoutes.patch('/:id',catchAsync( httpUpdateTour))
- toursRoutes.delete('/:id' , catchAsync(auth) ,admin('admin','lead-guide') ,catchAsync( httpDeleteTour));
+ toursRoutes.delete('/:id' , catchAsync(auth) ,restrictTo('admin','lead-guide') ,catchAsync( httpDeleteTour));
  toursRoutes.delete('/',catchAsync( httpdeleteAllData))
 
 

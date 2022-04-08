@@ -17,13 +17,13 @@ const {loadAlltours} = require('../src/models/tours.model');
 
 const users = require('../src/models/users.mongo');
 const tours = require('../src/models/tours.mongo')
-
+const reviews = require('../src/models/reviews.mongo');
 async function startServer() { 
   await startMongo();
   //await tours.deleteMany()
-
+ //await reviews.deleteMany()
   await loadAlltours();
- // await users.deleteMany()
+  //await users.deleteMany()
   server.listen(PORT , () => {
     console.log('server is running');
   })

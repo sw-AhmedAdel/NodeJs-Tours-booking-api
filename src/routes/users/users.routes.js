@@ -1,7 +1,7 @@
 const express = require('express');
 const userRoute = express.Router();
 const auth =  require('../../middleware/auth');
-const admin = require('../../middleware/admin');
+const restrictTo = require('../../middleware/admin');
 const {catchAsync} = require('../../services/query');
 
 const {
@@ -22,7 +22,7 @@ const {
 } = require('../../password/password');
 
 
-userRoute.get('/' , catchAsync(auth) , admin('admin','lead-guide') , catchAsync(httpGetAllUsers));
+userRoute.get('/' , catchAsync(auth) , restrictTo('admin','lead-guide') , catchAsync(httpGetAllUsers));
 userRoute.post('/signup', catchAsync(httpCreateUser));
 userRoute.get('/my/profile' , catchAsync( auth ), catchAsync(httpGetMyProfile));
 userRoute.patch('/updateme' , catchAsync(auth) , catchAsync(httpUpdateUSer) );

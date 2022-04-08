@@ -1,7 +1,7 @@
 
 const appError = require('../services/class.err.middleware');
 
-const admim = (...role) => {
+const restrictTo = (...role) => {
   return (req , res , next) =>{
   if(!role.includes(req.user.role)){
     return next(new appError('You do not have permisssion to preform this action' , 403))
@@ -11,6 +11,6 @@ const admim = (...role) => {
 
 }
 
-module.exports = admim;
+module.exports = restrictTo;
 
  
