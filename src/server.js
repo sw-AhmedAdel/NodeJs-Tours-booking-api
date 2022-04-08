@@ -26,8 +26,9 @@ async function startServer() {
    await DeleteAllData();
  }
 
+ if(process.argv[2] ==='i') {
   await loadAllData();
- 
+ }
   server.listen(PORT , () => {
     console.log('server is running');
   })

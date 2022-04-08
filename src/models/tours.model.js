@@ -11,7 +11,7 @@ async function  GetALLTours (filter  , skip , limit , sortBy , fields) {
   .limit(limit)
   .sort(sortBy)
   .select(fields)
-
+  
   
 } 
 

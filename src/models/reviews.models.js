@@ -33,11 +33,20 @@ async function findReview(filter) {
   return await reviews.findOne(filter)
 }
  
+async function DeleteReview(id) {
+  const review = await reviews.findOneAndDelete({
+    _id : id
+  })
+  return review;
+  
+}
+
 module.exports = {
   GetAllReviews,
   CreateReview,
   FindTour,
   UpdateReview,
-  findReview
+  findReview,
+  DeleteReview
  }
  

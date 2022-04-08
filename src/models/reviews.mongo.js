@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const tours = require('./tours.mongo');
+
 const  reviewsScheam = new mongoose.Schema({
   review: {
     type : String,
@@ -30,6 +32,51 @@ const  reviewsScheam = new mongoose.Schema({
   toJSON:{virtuals: true},
   toObject:{virtuals: true},
 })
+
+reviewsScheam.statics.calcAverageRatings = async function (tour_id) {
+  const stats = await reviews.aggregate([
+
+    {
+      $match: {
+        tour : tour_id, // means get me all reviews that belongs to that tour id
+      }
+    }
+    ,
+    {
+      $group: {// group all reviews to so some stats
+       _id:'$tour', // group all them using the tour id
+       numRatings: {$sum : 1},
+       numAvg : {$avg:'$rating'},
+      }
+    }
+  ])
+
+  if(stats.length > 0) {
+   await tours.findByIdAndUpdate(tour_id , {
+    ratingsAverage: stats[0].numAvg,
+    ratingsQuantity: stats[0].numRatings
+  })
+  }
+  else {
+    await tours.findByIdAndUpdate(tour_id , {
+      ratingsAverage: 0,
+      ratingsQuantity:0,
+    })
+  }
+} 
+
+reviewsScheam.post('save' ,async function(){
+  //use it when save the reivew make tha all stats on tour
+  //here use constructor coz it points to the model review coz it did not create yet 
+  // use review.constructor why coz it is supposed to use the model which is reviews but here it did not create yer
+  const review = this ;
+  await review.constructor.calcAverageRatings(review.tour)
+})
+
+reviewsScheam.post(/^findOneAnd/, async function(review) {
+  await review.constructor.calcAverageRatings(review.tour);
+});
+
 //populate the all users for the all reivew mean show me each review has been made by user 
 // this is a middleware so any middle ware use find this will make it populate so when i get one tour
 //i will get the all data about review

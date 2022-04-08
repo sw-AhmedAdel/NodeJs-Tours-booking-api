@@ -3,7 +3,8 @@ const {
   CreateReview,
   FindTour,
   UpdateReview,
-  findReview
+  findReview,
+  DeleteReview
 } = require('../../models/reviews.models');
 
 const appError = require('../../services/class.err.middleware');
@@ -80,7 +81,10 @@ async function httpDeleteMyReview (req , res , next) {
   if(!review) {
     return next(new appError('Review was not found'));
   }
-  await review.remove();
+  const isDeleted = await DeleteReview(req.params.reviewid);
+  if(!isDeleted) {
+    return next(new appError('Could not delete it'));
+  }
   return res.status(200).json({
     status:'success',
     message:'your review has been deleted'
@@ -100,7 +104,10 @@ async function httpAdminDeleteReview(req , res ,next) {
   if(!review) {
     return next(new appError('No review was found', 404));
   }
-  await review.remove();
+  const isDeleted = await DeleteReview(req.params.reviewid);
+  if(!isDeleted) {
+    return next(new appError('Could not delete it'));
+  }
   return res.status(200).json({
     status:'success',
     message:'The review has been deleted'

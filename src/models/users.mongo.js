@@ -71,24 +71,6 @@ userSchema.methods.createPasswordResetToken = async function(){
 }
 
 
-userSchema.pre('save' ,   function(next) {
-  
-  if (!this.isModified('password') || this.isNew) return next();
-  this.passwordChangedAt = Date.now() - 1000; 
-
-   next();
-})
-
-userSchema.methods.changePasswordAfter =  function(JWTTimestamp) {
-  if (this.passwordChangedAt) {
-    const changedTimestamp = parseInt( this.passwordChangedAt.getTime() / 1000,  10 );
- 
-    return JWTTimestamp < changedTimestamp;
-  }
-
-  // False means NOT changed
-  return false;
-}
 /* 1 when i use the cookie to store the token, first check if token is verify   
  2- when i get the decoded i need to check if the user still exits in the database or he deleted his account 
  3- if user exits i want to make sure he did not change the password coz it related to the token
@@ -131,6 +113,26 @@ userSchema.statics.findByrCedenitals =  async function (email , password) {
     return false;
   }
   return user;
+}
+
+
+userSchema.pre('save' ,   function(next) {
+  
+  if (!this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000; 
+
+   next();
+})
+
+userSchema.methods.changePasswordAfter =  function(JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt( this.passwordChangedAt.getTime() / 1000,  10 );
+ 
+    return JWTTimestamp < changedTimestamp;
+  }
+
+  // False means NOT changed
+  return false;
 }
 
 userSchema.pre('save' , async function(next) {

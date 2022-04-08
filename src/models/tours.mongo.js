@@ -17,7 +17,6 @@ const toursSchema = new mongoose.Schema({
   },
   ratingsAverage : {
     type:Number,
-    default:0,
     min:[1 , 'Rating must be above 1'],
     max:[5 ,'Rating must be bellow or equal 5.0']
   },
@@ -152,6 +151,13 @@ toursSchema.virtual('durationWeeks').get(function(){
   next();
 })
 */
+
+
+toursSchema.index({ // compained index
+  price:1 , ratingsAverage: -1
+})
+
+toursSchema.index({slug : 1})
 
 // use middleware to modify the data before saving it in mongo
 toursSchema.pre('save', function(next) {
