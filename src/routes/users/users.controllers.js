@@ -80,10 +80,11 @@ async function httpDeleteMyAccount (req , res , next) {
 }
 
 async function httpLogOut (req , res , next) {
-  const user = req.user;
-  user.tokens = user.tokens.filter((token) => req.token !== token.token);
-  await user.save();
-
+  
+  res.cookie('jwt', 'LoggedOut', {
+    expires: new Date(Date.now + 1 + 1000),// 1 sec
+    httpOnly: true
+  })
   return res.status(200).json({
     status:'success',
     message:'you have loged out'

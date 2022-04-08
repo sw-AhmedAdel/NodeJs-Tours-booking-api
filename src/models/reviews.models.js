@@ -29,10 +29,8 @@ async function UpdateReview(review , id) {
   return newReview
 }
 
-async function findReview(id) {
-  return await reviews.findOne({
-    _id : id
-  })
+async function findReview(filter) {
+  return await reviews.findOne(filter)
 }
  
 module.exports = {

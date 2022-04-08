@@ -7,7 +7,8 @@ const appError = require('../services/class.err.middleware');
 
 async function auth (req , res , next ) {
    
-   const token = req.header('Authorization').replace('Bearer ', '');
+    
+   const token = req.headers.authorization.split(' ')[1];
    if(!token) {
     return next(new appError('you are not loged in, please log in to have access', 401))
    }

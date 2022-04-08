@@ -4,8 +4,9 @@ const reviewsRoute = express.Router();
 const {
  httpGetAllReviews,
  httpCreateReview,
- httpUpdateReview,
- httpDeleteReview
+ httpUpdateMyReview,
+ httpDeleteMyReview,
+ httpAdminDeleteReview
 } = require('./reviews.controllers');
 
 const auth = require('../../middleware/auth');
@@ -15,11 +16,15 @@ const {
   catchAsync
 } = require('../../services/query');
 
-reviewsRoute.get('/' , catchAsync(auth) , catchAsync(httpGetAllReviews));
+
 reviewsRoute.get('/:tourid/review' , catchAsync(auth), catchAsync(httpGetAllReviews) );
 reviewsRoute.post('/:tourid/review' , catchAsync(auth) , restrictTo('user') , catchAsync(httpCreateReview));
-reviewsRoute.patch('/:reviewid/review', catchAsync(auth) , catchAsync(httpUpdateReview));
-reviewsRoute.delete('/:reviewid/review', catchAsync(auth) , catchAsync(httpDeleteReview));
+reviewsRoute.patch('/:reviewid/review', catchAsync(auth) ,restrictTo('user'), catchAsync(httpUpdateMyReview));
+reviewsRoute.delete('/:reviewid/delete/my/review', catchAsync(auth) ,restrictTo('user'), catchAsync(httpDeleteMyReview));
+
+
+reviewsRoute.get('/' , catchAsync(auth) , restrictTo('admin'),catchAsync(httpGetAllReviews));
+reviewsRoute.delete('/:reviewid/admin/delete/review', catchAsync(auth) ,restrictTo('admin'), catchAsync(httpAdminDeleteReview));
 
 
 

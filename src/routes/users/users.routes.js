@@ -22,16 +22,21 @@ const {
 } = require('../../password/password');
 
 
-userRoute.get('/' , catchAsync(auth) , restrictTo('admin','lead-guide') , catchAsync(httpGetAllUsers));
-userRoute.post('/signup', catchAsync(httpCreateUser));
-userRoute.get('/my/profile' , catchAsync( auth ), catchAsync(httpGetMyProfile));
-userRoute.patch('/updateme' , catchAsync(auth) , catchAsync(httpUpdateUSer) );
+userRoute.post('/signup' ,catchAsync(httpCreateUser));
 userRoute.post('/login' , catchAsync(httpLoginUser));
-userRoute.delete('/deleteme',  catchAsync(auth) ,catchAsync(httpDeleteMyAccount));
-userRoute.get('/logout', catchAsync(auth) , catchAsync(httpLogOut) );
-
 userRoute.post('/forgotpassword' ,  catchAsync(forgotPassword));
 userRoute.patch('/resetpassword/:token' , catchAsync(resetPassword) );
-userRoute.patch('/updatepassword',  catchAsync( auth ), catchAsync(updatePassword)  )
+
+userRoute.use(catchAsync(auth));
+userRoute.get('/my/profile' , catchAsync(httpGetMyProfile));
+userRoute.patch('/updateme' , catchAsync(httpUpdateUSer) );
+userRoute.delete('/deleteme',  catchAsync(httpDeleteMyAccount));
+userRoute.get('/logout' , catchAsync(httpLogOut) );
+userRoute.patch('/updatepassword',   catchAsync(updatePassword)  )
+
+
+userRoute.use(restrictTo('admin'));
+userRoute.get('/', catchAsync(httpGetAllUsers));
+
 
 module.exports = userRoute;
