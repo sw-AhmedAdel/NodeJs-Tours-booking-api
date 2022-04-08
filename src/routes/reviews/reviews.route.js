@@ -3,7 +3,7 @@ const reviewsRoute = express.Router();
 
 const {
  httpGetAllReviews,
- httpCreateReview
+ httpCreateReview,
 } = require('./reviews.controllers');
 
 const auth = require('../../middleware/auth');
@@ -14,6 +14,7 @@ const {
 } = require('../../services/query');
 
 reviewsRoute.get('/' , catchAsync(auth) , catchAsync(httpGetAllReviews));
+reviewsRoute.get('/:tourid/review' , catchAsync(auth), catchAsync(httpGetAllReviews) );
 reviewsRoute.post('/:tourid/review' , catchAsync(auth) , restrictTo('user') , catchAsync(httpCreateReview));
 
 module.exports= reviewsRoute;

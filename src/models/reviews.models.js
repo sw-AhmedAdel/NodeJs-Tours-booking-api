@@ -1,8 +1,8 @@
 const reviews = require('./reviews.mongo');
 const tours = require('./tours.mongo');
 
-async function GetAllReviews () {
-  return await reviews.find()
+async function GetAllReviews (filter) {
+  return await reviews.find(filter)
 }
 
 async function FindTour(id) {
@@ -21,8 +21,10 @@ async function CreateReview (reviewBody , user_id , tour_id ) {
    return newReview;
 }
 
+
+ 
 module.exports = {
   GetAllReviews,
   CreateReview,
   FindTour,
-}
+ }

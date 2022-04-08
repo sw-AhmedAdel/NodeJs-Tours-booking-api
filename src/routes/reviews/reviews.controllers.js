@@ -1,13 +1,20 @@
 const {
   GetAllReviews,
   CreateReview,
-  FindTour
+  FindTour,
 } = require('../../models/reviews.models');
-const appError = require('../../services/class.err.middleware');
+ const appError = require('../../services/class.err.middleware');
 
 async function httpGetAllReviews(req , res , next) {
-  
-   const reviews = await GetAllReviews();
+  let filter = {};
+  if(req.params.tourid){
+    const tour = await FindTour(req.params.tourid);
+    if(!tour) {
+      return next(new appError('No tour was found', 404));
+    }
+    filter.tour = req.params.tourid
+  }
+   const reviews = await GetAllReviews(filter);
    return res.status(200).json({
      status:'success',
      data: reviews,
@@ -34,8 +41,10 @@ async function httpCreateReview(req , res , next) {
   })
 }
 
+ 
 
 module.exports = {
   httpCreateReview,
-  httpGetAllReviews
+  httpGetAllReviews,
+   
 }
