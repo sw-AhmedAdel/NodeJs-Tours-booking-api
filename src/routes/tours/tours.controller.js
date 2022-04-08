@@ -24,9 +24,11 @@ async function httpGetOneTour (req , res , next) {
   if(!tour) {
     return  next(new appError('No tour found with that id', 404));
   }
-  return res.status(200).json({
+   await tour.populate('reviews')
+   return res.status(200).json({
     status:'success',
-    data : tour
+    data : tour,
+  
   })
 }
 

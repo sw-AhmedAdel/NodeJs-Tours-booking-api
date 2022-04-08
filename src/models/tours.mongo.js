@@ -103,7 +103,8 @@ const toursSchema = new mongoose.Schema({
       day: Number,
     },
   ],
- // guides: Array, used for embeded
+ // guides: Array, used for embeded coz for each tour i want to store the guide or lead guide on it
+ //this is called as child ref means out the user id here
  guides : [
    {
      type: mongoose.Schema.Types.ObjectId,
@@ -124,7 +125,16 @@ createdAt : {
   select : false >> means do not show it to users
 }
 */ 
-
+//here each review has user id and tour id, so i want each review for each tour so populate the reivew depends on
+//the tour id in it and do that when i request one tour
+//the all data i want to get will come from the review depends on populate the reviews using find
+//to make this work to get the all reivew for each tour i must use in review middleware which is find 
+//to populate the all review and here i use virtuals to get all review and in get one tour controller populate it
+toursSchema.virtual('reviews' , {
+ ref: 'review',
+ localField:'_id',
+ foreignField:'tour',
+})
 
 toursSchema.virtual('durationWeeks').get(function(){
   return this.duration / 7;
