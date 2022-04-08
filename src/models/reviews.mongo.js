@@ -77,6 +77,10 @@ reviewsScheam.post(/^findOneAnd/, async function(review) {
   await review.constructor.calcAverageRatings(review.tour);
 });
 
+//prevern dub reviews
+reviewsScheam.index({tour :1 , user :1} , {
+  unique: true,
+})
 //populate the all users for the all reivew mean show me each review has been made by user 
 // this is a middleware so any middle ware use find this will make it populate so when i get one tour
 //i will get the all data about review
