@@ -29,12 +29,17 @@ async function UpdateReview(review , id) {
   return newReview
 }
 
-
+async function findReview(id) {
+  return await reviews.findOne({
+    _id : id
+  })
+}
  
 module.exports = {
   GetAllReviews,
   CreateReview,
   FindTour,
-  UpdateReview
+  UpdateReview,
+  findReview
  }
  

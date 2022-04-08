@@ -5,6 +5,7 @@ const {
  httpGetAllReviews,
  httpCreateReview,
  httpUpdateReview,
+ httpDeleteReview
 } = require('./reviews.controllers');
 
 const auth = require('../../middleware/auth');
@@ -17,6 +18,9 @@ const {
 reviewsRoute.get('/' , catchAsync(auth) , catchAsync(httpGetAllReviews));
 reviewsRoute.get('/:tourid/review' , catchAsync(auth), catchAsync(httpGetAllReviews) );
 reviewsRoute.post('/:tourid/review' , catchAsync(auth) , restrictTo('user') , catchAsync(httpCreateReview));
-reviewsRoute.patch('/:tourid/review', catchAsync(auth) , catchAsync(httpUpdateReview));
+reviewsRoute.patch('/:reviewid/review', catchAsync(auth) , catchAsync(httpUpdateReview));
+reviewsRoute.delete('/:reviewid/review', catchAsync(auth) , catchAsync(httpDeleteReview));
+
+
 
 module.exports= reviewsRoute;

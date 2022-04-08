@@ -2,7 +2,8 @@ const {
   GetAllReviews,
   CreateReview,
   FindTour,
-  UpdateReview
+  UpdateReview,
+  findReview
 } = require('../../models/reviews.models');
 
 const appError = require('../../services/class.err.middleware');
@@ -47,18 +48,34 @@ if(!req.params.tourid){
 }
 
 async function httpUpdateReview(req , res ,next) {
-  if(!req.params.tourid){
-    return next(new appError('please provide us with tour id, 404'));
+  if(!req.params.reviewid){
+    return next(new appError('please provide us with review id, 404'));
   }
-  const tour = FindTour(req.params.tourid);
-  if(!tour) {
-    return next(new appError('No tour was found', 404));
+  const review = await findReview(req.params.reviewid);
+  if(!review) {
+    return next(new appError('No review was found', 404));
   }
   
-  const newReview = await UpdateReview(req.body , req.params.tourid);
+  const newReview = await UpdateReview(req.body , req.params.reviewid);
   return res.status(200).json({
     status:'success',
     data:newReview
+  })
+}
+
+
+async function httpDeleteReview(req , res ,next) {
+  if(!req.params.reviewid){
+    return next(new appError('please provide us with review id, 404'));
+  }
+  const review = await findReview(req.params.reviewid);
+  if(!review) {
+    return next(new appError('No review was found', 404));
+  }
+  await review.remove();
+  return res.status(200).json({
+    status:'success',
+    message:'your review has been deleted'
   })
 }
  
@@ -67,4 +84,5 @@ module.exports = {
   httpCreateReview,
   httpGetAllReviews,
   httpUpdateReview,
+  httpDeleteReview
 }
