@@ -126,7 +126,7 @@ async function httpLogOut (req , res , next) {
 async function httpDeleteMyImage(req , res , next) {
 
   if(req.user.photo.startsWith('defualt')) {
-   return next('You do not have an image to delete it!');
+   return next(new appError('You do not have an image to delete it!', 400));
   }
   req.user.photo ='defualt.png';
   await req.user.save();
