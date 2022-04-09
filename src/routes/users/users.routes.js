@@ -12,6 +12,8 @@ const {
   httpLoginUser,
   httpDeleteMyAccount,
   httpLogOut,
+  uploadImageMiddleware,
+  httpDeleteMyImage,
   
 } = require('./users.controllers');
 
@@ -29,7 +31,8 @@ userRoute.patch('/resetpassword/:token' , catchAsync(resetPassword) );
 
 userRoute.use(catchAsync(auth));
 userRoute.get('/my/profile' , catchAsync(httpGetMyProfile));
-userRoute.patch('/updateme' , catchAsync(httpUpdateUSer) );
+userRoute.patch('/updateme' , uploadImageMiddleware , catchAsync(httpUpdateUSer) );
+userRoute.delete('/delete/my/photo'  , catchAsync(httpDeleteMyImage) );
 userRoute.delete('/deleteme',  catchAsync(httpDeleteMyAccount));
 userRoute.get('/logout' , catchAsync(httpLogOut) );
 userRoute.patch('/updatepassword',   catchAsync(updatePassword)  )

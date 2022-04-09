@@ -13,6 +13,33 @@ const {
 const sendTokenViaCookie = require('../../services/cookie');
 
 const appError = require('../../services/class.err.middleware');
+const multer = require('multer');
+
+const multerStorage = multer.diskStorage({
+  destination: (req , file , cb) => {
+    cb(null , 'public/images/users');
+  },
+  filename:(req , file , cb) => {
+    const ext = file.mimetype.split('/')[1];
+    cb(null , `user-${req.user._id}-${Date.now()}.${ext}`);
+  }
+})
+
+const multerFilter = (req , file , cb) => {
+  if(file.mimetype.startsWith('image')) 
+  {
+    cb(null , true);
+  }else {
+    cb(new appError ('Not an image! please upload only images', 400 ) , false);
+  }
+}
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter : multerFilter,
+})
+
+const uploadImageMiddleware = upload.single('photo');
 
 async function httpGetAllUsers(req ,res , next) {
   return res.status(200).json(await GetAllUsers());
@@ -58,12 +85,16 @@ async function httpLoginUser (req , res , next) {
   })
 }
 async function httpUpdateUSer(req , res , next) {
- 
+  //console.log(req.file);
   if(req.body.password || req.body.passwordConfirm){
     return next(new appError('This route is not for password update, please use /updatepassword', 400));
   }
+  
   const filter = fliterObject(req.body , 'name', 'email')
-  const user = await UpdateUSer(req.user._id  , filter);
+  if(req.file) {
+    filter.photo = req.file.filename
+  }
+   const user = await UpdateUSer(req.user._id  , filter);
 
   return res.status(200).json({
     status:'success',
@@ -92,7 +123,19 @@ async function httpLogOut (req , res , next) {
 }
 
 
+async function httpDeleteMyImage(req , res , next) {
 
+  if(req.user.photo.startsWith('defualt')) {
+   return next('You do not have an image to delete it!');
+  }
+  req.user.photo ='defualt.png';
+  await req.user.save();
+  return res.status(200).json({
+    status:'success',
+    messgae:'your image has been deleted',
+    data: req.user
+  })
+}
 
 module.exports = {
   httpGetAllUsers,
@@ -102,5 +145,6 @@ module.exports = {
   httpLoginUser,
   httpDeleteMyAccount,
   httpLogOut,
-  
+  uploadImageMiddleware,
+  httpDeleteMyImage
 }
