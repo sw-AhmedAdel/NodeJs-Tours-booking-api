@@ -9,6 +9,7 @@
   httpdeleteAllData,
   httpGetToursStates,
   httpGetToursForEachMonth,
+  httpGetAllToursWithin
  } = require('./tours.controller');
 
 const {
@@ -29,6 +30,7 @@ toursRoutes.get('/tours/stats' ,catchAsync(auth)  ,catchAsync( httpGetToursState
 toursRoutes.use(auth);
 toursRoutes.get('/:id' , catchAsync(httpGetOneTour));
 toursRoutes.get('/monthly.plan/:year' ,catchAsync( httpGetToursForEachMonth));
+toursRoutes.get('/within/:distance/center/:latlng/unit/:unit' , httpGetAllToursWithin);
 
 toursRoutes.use(restrictTo('admin','lead-guide'));
 toursRoutes.post('/' , catchAsync( httpCreateNewTour));

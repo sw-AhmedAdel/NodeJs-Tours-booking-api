@@ -139,6 +139,16 @@ async function GetToursForEachMonth (year) {
   return monthlyTours;
 }
 
+
+async function FindToursWitn(lat , lng , reduis) {
+  return await tours.find({
+    startLocation: {
+      $geoWithin: {
+        $centerSphere: [[lng , lat], reduis]
+      }
+    }
+  })
+}
 module.exports = {
   CreateNewTour,
   GetALLTours,
@@ -146,7 +156,8 @@ module.exports = {
   UpdateTour,
   deleteAllData,
   GetToursStates,
-  GetToursForEachMonth
+  GetToursForEachMonth,
+  FindToursWitn
 }
 
 

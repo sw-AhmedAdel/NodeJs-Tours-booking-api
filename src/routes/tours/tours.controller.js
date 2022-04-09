@@ -5,7 +5,8 @@
    UpdateTour,
    deleteAllData,
    GetToursStates,
-   GetToursForEachMonth
+   GetToursForEachMonth,
+   FindToursWitn
 } = require('../../models/tours.model');
 
 const {
@@ -129,6 +130,27 @@ async function httpGetToursForEachMonth (req , res , next) {
     data : tours
   })
 }
+///within/:distance/center/:latlng/unit/:unit
+// {{url}}/v1/tours/within/233/center/34.111745,-118.113491/unit/mi
+async function httpGetAllToursWithin (req , res , next) {
+  const {distance ,latlng, unit} = req.params;
+  const [lat , lng] = latlng.split(',');
+  const reduis = unit ==='mi' ? distance / 3963.2 : distance / 6378.1 ;
+
+  if (!lat || ! lng) {
+    return  next(new appError('please provide  latitude and lanitude in the format lat,lng', 400));
+  }
+
+  const tours = await FindToursWitn(lat , lng , reduis);
+  if(!tours) {
+    return  next(new appError('No tours in this location', 404));
+  }
+  return res.status(200).json({
+    status:'success',
+    results: tours.length,
+    data: tours 
+  })
+}
 
 
  module.exports = {
@@ -139,5 +161,6 @@ async function httpGetToursForEachMonth (req , res , next) {
    httpDeleteTour,
    httpdeleteAllData,
    httpGetToursStates,
-   httpGetToursForEachMonth
+   httpGetToursForEachMonth,
+   httpGetAllToursWithin
  }

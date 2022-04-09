@@ -159,6 +159,7 @@ toursSchema.index({ // compained index
 })
 
 toursSchema.index({slug : 1})
+toursSchema.index({startLocation : '2dsphere'}); //index for location
 
 // use middleware to modify the data before saving it in mongo
 toursSchema.pre('save', function(next) {
