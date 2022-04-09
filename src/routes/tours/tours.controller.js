@@ -16,8 +16,35 @@ const {
 
 const filterFeatures = require('../../services/class.filters');
 const appError = require('../../services/class.err.middleware');
+const multer = require('multer');
+const sharp = require('sharp');
 
+const multerStorage = multer.memoryStorage();
+const multerFilter = (req , file , cb) => {
+  if(file.mimetype.startsWith('image')) 
+  {
+    cb(null , true);
+  }else {
+    cb(new appError ('Not an image! please upload only images', 400 ) , false);
+  }
+}
 
+const upload = multer({
+  storage: multerStorage,
+  fileFilter : multerFilter,
+})
+
+// use fields in case i want to upload many images to the same page
+const uploadToursImages = upload.fields([
+  {name :'imageCover' , maxCount: 1},
+  {name: 'images' , maxCount: 3},
+])
+// upload.single('name of the field to upload one image) >> req.file
+//upload.array('name of the filed to store many images' , max count for images >> 3) >> req.files
+
+const resizeToursImages = async (req , res , next) => {
+ next();
+}
 
 async function httpGetOneTour (req , res , next) {
   const id = req.params.id;
@@ -58,6 +85,7 @@ async function httpGetALLTours(req , res , next) {
 
 
   async function  httpCreateNewTour  (req , res , next)  {
+   
    const tour = req.body;
    const NewTour= await CreateNewTour(tour);
    return res.status(201).json(NewTour);
@@ -65,6 +93,7 @@ async function httpGetALLTours(req , res , next) {
  }
 
 async function httpUpdateTour (req , res , next) {
+  console.log(req.fields);
   const id = req.params.id;
   const tour = await findTour(id);
  
@@ -183,5 +212,7 @@ async function httpCalculatingDistances (req , res , next) {
    httpGetToursStates,
    httpGetToursForEachMonth,
    httpGetAllToursWithin,
-   httpCalculatingDistances
+   httpCalculatingDistances,
+   uploadToursImages,
+   resizeToursImages,
  }

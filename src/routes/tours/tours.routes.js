@@ -10,7 +10,9 @@
   httpGetToursStates,
   httpGetToursForEachMonth,
   httpGetAllToursWithin,
-  httpCalculatingDistances
+  httpCalculatingDistances,
+  uploadToursImages,
+  resizeToursImages,
  } = require('./tours.controller');
 
 const {
@@ -36,7 +38,7 @@ toursRoutes.get('/distance/center/:latlng/unit/:unit' , catchAsync(httpCalculati
 
 toursRoutes.use(restrictTo('admin','lead-guide'));
 toursRoutes.post('/' , catchAsync( httpCreateNewTour));
-toursRoutes.patch('/:id',catchAsync( httpUpdateTour))
+toursRoutes.patch('/:id', uploadToursImages , catchAsync(resizeToursImages),catchAsync( httpUpdateTour))
 toursRoutes.delete('/:id' ,catchAsync( httpDeleteTour));
 toursRoutes.delete('/',catchAsync( httpdeleteAllData))
 

@@ -29,14 +29,25 @@ function handelInvalidToken() {//to test that make auth in postman bearertoken a
   return new appError(message , 401);
 }
 
+function handelGeoLocation() {
+  const message ='Can not extract geo location from startLocation, please determine the start location in scheam'
+  return new appError(message , 401);
+}
+
 //i want to see error while i am dev 
 function sendErrorDev (err , res) {
+  let error = Object.assign(err);
+  if(error.code === 16755) { 
+    error = handelGeoLocation()
+  }
+
   return res.status(err.statusCode).json({
-    status : err.status,
-    message : err.message,
-    error : err,
-    stack : err.stack,
+    status : error.status,
+    message : error.message,
+    error : error,
+    stack : error.stack,
   })
+
 }
  
 
@@ -85,6 +96,7 @@ function handlingErrorMiddleware (err , req , res , next)  {
     if(error.name ==='JsonWebTokenError') {
       error = handelInvalidToken();
     }
+  
     sendErrorProd(error, res);    
    } 
 }
