@@ -6,7 +6,8 @@
    deleteAllData,
    GetToursStates,
    GetToursForEachMonth,
-   FindToursWitn
+   FindToursWitn,
+   getDistances
 } = require('../../models/tours.model');
 
 const {
@@ -132,6 +133,8 @@ async function httpGetToursForEachMonth (req , res , next) {
 }
 ///within/:distance/center/:latlng/unit/:unit
 // {{url}}/v1/tours/within/233/center/34.111745,-118.113491/unit/mi
+//user will give his lat and lang and dis and i will give him the nearst tours 
+// if dis in k like 200 k , i wil give him the nearst tours in this range depend on his location
 async function httpGetAllToursWithin (req , res , next) {
   const {distance ,latlng, unit} = req.params;
   const [lat , lng] = latlng.split(',');
@@ -152,6 +155,23 @@ async function httpGetAllToursWithin (req , res , next) {
   })
 }
 
+//{{url}}/v1/tours/distance/center/34.111745,-118.113491/unit/mi
+//user will put his lat and lang and i will give him the distance for each tour
+async function httpCalculatingDistances (req , res , next) {
+  const {latlng, unit} = req.params;
+  const [lat , lng] = latlng.split(',');
+
+  if (!lat || ! lng) {
+    return  next(new appError('please provide  latitude and lanitude in the format lat,lng', 400));
+  }
+  //cal dis in mi or k
+  const multiplier = unit ==='mi' ? 0.000621371 : 0.001; 
+  const distances = await getDistances(lat, lng ,multiplier );
+  return res.status(200).json({
+    status:'success',
+    data: distances 
+  })
+}
 
  module.exports = {
    httpGetOneTour ,
@@ -162,5 +182,6 @@ async function httpGetAllToursWithin (req , res , next) {
    httpdeleteAllData,
    httpGetToursStates,
    httpGetToursForEachMonth,
-   httpGetAllToursWithin
+   httpGetAllToursWithin,
+   httpCalculatingDistances
  }

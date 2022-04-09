@@ -142,13 +142,44 @@ async function GetToursForEachMonth (year) {
 
 async function FindToursWitn(lat , lng , reduis) {
   return await tours.find({
-    startLocation: {
+    startLocation: {// to make query on startLocation we need to add index to it
+      //in order to be able to do just basic queries, we need to first attribute an index
+     //to the field where the geospatial data that we're searching for is stored.
       $geoWithin: {
         $centerSphere: [[lng , lat], reduis]
       }
     }
   })
 }
+
+async function getDistances(lat, lng ,multiplier ) {
+  const distances = await tours.aggregate([
+
+    {//use get near to get the all distance depend on ur lat, lng and it works depends on index that point to 
+      // any geolocation like startlocation 
+    //in order to be able to do just basic queries, we need to first attribute an index
+     //to the field where the geospatial data that we're searching for is stored.
+    $geoNear: {
+     near:{
+       type:'Point',
+       coordinates:[lng * 1,lat* 1],
+     },
+     distanceField: 'distance',
+     distanceMultiplier:multiplier,
+    }
+  }
+  ,
+  {
+    $project:{
+      name:1,
+      distance:1
+    }
+  }
+
+  ]);
+  return distances;
+}
+
 module.exports = {
   CreateNewTour,
   GetALLTours,
@@ -157,7 +188,8 @@ module.exports = {
   deleteAllData,
   GetToursStates,
   GetToursForEachMonth,
-  FindToursWitn
+  FindToursWitn,
+  getDistances
 }
 
 

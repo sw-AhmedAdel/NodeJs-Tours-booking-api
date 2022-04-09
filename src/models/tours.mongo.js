@@ -160,6 +160,7 @@ toursSchema.index({ // compained index
 
 toursSchema.index({slug : 1})
 toursSchema.index({startLocation : '2dsphere'}); //index for location
+//index needs to be a 2D sphere index if the data describes real points on the Earth like sphere.
 
 // use middleware to modify the data before saving it in mongo
 toursSchema.pre('save', function(next) {
