@@ -14,7 +14,9 @@ const sendTokenViaCookie = require('../../services/cookie');
 
 const appError = require('../../services/class.err.middleware');
 const multer = require('multer');
+const sharp = require('sharp');
 
+/* here store the image in the desk not memory
 const multerStorage = multer.diskStorage({
   destination: (req , file , cb) => {
     cb(null , 'public/images/users');
@@ -24,7 +26,10 @@ const multerStorage = multer.diskStorage({
     cb(null , `user-${req.user._id}-${Date.now()}.${ext}`);
   }
 })
+*/
 
+// save the image in the memory as a buffer so i can use sharp to resize it
+const multerStorage = multer.memoryStorage();
 const multerFilter = (req , file , cb) => {
   if(file.mimetype.startsWith('image')) 
   {
@@ -32,6 +37,21 @@ const multerFilter = (req , file , cb) => {
   }else {
     cb(new appError ('Not an image! please upload only images', 400 ) , false);
   }
+}
+
+
+const resizeImage = (req , res , next) => {
+  if(!req.file) {
+    return next();
+  }
+  req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`
+  sharp(req.file.buffer)
+  .resize({width:500 , height:500})
+  .toFormat('jpeg')
+  .jpeg({quality:90}) // compressed it's size
+  .toFile(`public/images/users/${req.file.filename}`);
+
+  next();
 }
 
 const upload = multer({
@@ -146,5 +166,6 @@ module.exports = {
   httpDeleteMyAccount,
   httpLogOut,
   uploadImageMiddleware,
-  httpDeleteMyImage
+  httpDeleteMyImage,
+  resizeImage
 }
