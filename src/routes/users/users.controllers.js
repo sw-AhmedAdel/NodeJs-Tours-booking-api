@@ -40,12 +40,12 @@ const multerFilter = (req , file , cb) => {
 }
 
 
-const resizeImage = (req , res , next) => {
+const resizeImage = async (req , res , next) => {
   if(!req.file) {
     return next();
   }
   req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`
-  sharp(req.file.buffer)
+  await sharp(req.file.buffer)
   .resize({width:500 , height:500})
   .toFormat('jpeg')
   .jpeg({quality:90}) // compressed it's size
