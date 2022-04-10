@@ -1,6 +1,9 @@
 require('dotenv').config();
 const nodemailer = require('nodemailer');// used to create transporter to send emails
 require('dotenv').config();
+const pug = require('pug');
+const path = require('path');
+const htmlToText= require('html-to-text');
 
 class Email {
   constructor (user , url) {
@@ -23,25 +26,34 @@ class Email {
      }
    })
  }
-  async send(subject , message) {
+  async send(template , subject) {
+    const html = pug.renderFile(
+      `${__dirname}/../../views/emails/${template}.pug`,
+      {
+        firstName:this.firstName,
+        url:this.url,
+        subject
+      }
+    )
     const mailOptions ={
       from :this.from,
       to:this.to,
       subject,
-      text :message
+      html,
+      text :htmlToText.fromString(html)
     }
     await this.newTransporter().sendMail(mailOptions);
   }
 
   async sendWelcome() {
-  await this.send('Welcome' , 'welcome to our family :)');
+  await this.send('welcome' , 'welcome to our family :)');
   }
   async sendGoodBy(){
-    await this.send('You deleted you account' , 'We will miss you, please come back soon!!');
+    await this.send('delete' , 'We will miss you, please come back soon!!');
   }
 
-  async sendPasswordreset(subject , message) {
-    await this.send(subject , message);
+  async sendPasswordreset() {
+    await this.send('passwordReset' ,'Your password token (valid for onlu 10 mints)');
   }
 
 }

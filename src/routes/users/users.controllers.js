@@ -68,7 +68,7 @@ async function httpGetAllUsers(req ,res , next) {
 async function httpCreateUser(req , res , next) {
    const user_info = req.body;
    const user = await CreateUser(user_info);
-   const url=`$${req.protocol}://${req.get('host')}/my/profile`;
+   const url=`$${req.protocol}://${req.get('host')}/v1/users/my/profile`;
    //user will get the email with a button when he clicks on it he will go to his account using url
    await new Email(user , url).sendWelcome();
    const token = await user.getAuthToken();
@@ -126,8 +126,9 @@ async function httpUpdateUSer(req , res , next) {
 }
 
 async function httpDeleteMyAccount (req , res , next) {
-  const url = `${req.protocol}://${req.get('host')}/app/signup`;
+  const url = `${req.protocol}://${req.get('host')}/v1/users/signup`;
   await new Email(req.user , url).sendGoodBy();
+  
   await DeleteUser(req.user._id);
   return res.status(200).json({
     status:'success',
