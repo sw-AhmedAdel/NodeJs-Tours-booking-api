@@ -15,7 +15,7 @@ const {
   uploadImageMiddleware,
   httpDeleteMyImage,
   resizeImage,
-
+  httpGetMyTours
 } = require('./users.controllers');
 
 const {
@@ -37,7 +37,7 @@ userRoute.delete('/delete/my/photo'  , catchAsync(httpDeleteMyImage) );
 userRoute.delete('/deleteme',  catchAsync(httpDeleteMyAccount));
 userRoute.get('/logout' , catchAsync(httpLogOut) );
 userRoute.patch('/updatepassword',   catchAsync(updatePassword)  )
-
+userRoute.get('/mytours' , catchAsync(auth) , catchAsync(httpGetMyTours));
 
 userRoute.use(restrictTo('admin'));
 userRoute.get('/', catchAsync(httpGetAllUsers));

@@ -3,7 +3,8 @@ const {
   findByrCedenitals,
   UpdateUSer,
   GetAllUsers,
-  DeleteUser
+  DeleteUser,
+  GetMyTours
 } = require('../../models/users.models');
 
 const {
@@ -163,6 +164,14 @@ async function httpDeleteMyImage(req , res , next) {
   })
 }
 
+async function httpGetMyTours(req, res , next) {
+  const tours = await GetMyTours(req.user._id);
+  return res.status(200).json({
+    status:'success',
+    data:tours
+  })
+}
+
 module.exports = {
   httpGetAllUsers,
   httpCreateUser,
@@ -173,5 +182,6 @@ module.exports = {
   httpLogOut,
   uploadImageMiddleware,
   httpDeleteMyImage,
-  resizeImage
+  resizeImage,
+  httpGetMyTours
 }

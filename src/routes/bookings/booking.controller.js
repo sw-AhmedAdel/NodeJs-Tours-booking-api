@@ -2,9 +2,11 @@ require('dotenv').config();
 const tours = require('../../models/tours.mongo');
 const stripe = require('stripe')(process.env.STRIPTE_SECRET_KEY);
 const appError = require('../../services/class.err.middleware');
+const bookings = require('../../models/booking.mongo');
 
 const {
-
+  GetALLBookings,
+  CreateBooking,
 } = require('../../models/booking.models');
 
 async function getCheckoutSession (req , res , next) {
@@ -30,6 +32,12 @@ async function getCheckoutSession (req , res , next) {
       }
     ]
   });
+  const book = {
+    tour : tour._id,
+    user:req.user._id,
+    price: tour.price,
+  }
+  await CreateBooking(book);
   return  res.status(200).json({
     status: 'success',
     session
@@ -42,7 +50,16 @@ async function getCheckoutSession (req , res , next) {
 }
 
 
+async function httpGetAllBooking(req , res, next) {
+  const bookings = await GetALLBookings();
+  return res.status(200).json({
+    status:'success',
+    data : bookings
+  })
+}
+
+
 module.exports = {
 getCheckoutSession,
-
+httpGetAllBooking
 }

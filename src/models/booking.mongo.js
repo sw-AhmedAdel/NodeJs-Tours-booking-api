@@ -24,8 +24,10 @@ bookingSchema.pre(/^find/ , function(next) {
     path:'user',
   }).populate({
     path:'tour',
-    select:'name , price'
+    select:'name , price -guides'
   })
+  next();
 })
 
 const bookings = mongoose.model('booking' , bookingSchema);
+module.exports = bookings;

@@ -1,5 +1,7 @@
 
 const users = require('./users.mongo');
+const bookings = require('./booking.mongo');
+const tours = require('./tours.mongo');
 
 async function GetAllUsers () {
   return await users.find();
@@ -29,10 +31,24 @@ async function DeleteUser (id) {
   })
 }
 
+async function GetMyTours(user_id) {
+  const userBookings = await bookings.find({
+    user : user_id,
+  })
+  const toursId = userBookings.map((el) => el.tour); // return all tours id
+  const userTours = await tours.find({
+    _id: {
+     $in : toursId
+    }
+  })
+  return userTours;
+ }
+
 module.exports = {
   CreateUser,
   findByrCedenitals,
   UpdateUSer,
   GetAllUsers,
-  DeleteUser
+  DeleteUser,
+  GetMyTours
 }
