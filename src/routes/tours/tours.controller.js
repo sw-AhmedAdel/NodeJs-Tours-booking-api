@@ -34,7 +34,7 @@ const upload = multer({
   fileFilter : multerFilter,
 })
 
-// use fields in case i want to upload many images to the same page
+// use fields in case i want to upload many images  at the same time for diff location
 const uploadToursImages = upload.fields([
   {name :'imageCover' , maxCount: 1},
   {name: 'images' , maxCount: 3},
@@ -43,6 +43,30 @@ const uploadToursImages = upload.fields([
 //upload.array('name of the filed to store many images' , max count for images >> 3) >> req.files
 
 const resizeToursImages = async (req , res , next) => {
+ if(!req.files.images || !req.files.imageCover) {
+   return next();
+ }
+  
+ // 1) cover image
+ req.body.imageCover=`tour-${req.params.id}-${Date.now()}.jpeg`;
+ await sharp(req.files.imageCover[0].buffer)
+ .resize({width :20000 , height: 1333})
+ .toFormat('jpeg')
+ .jpeg({quality:90})
+ .toFile(`public/images/tours/${req.body.imageCover}`);
+
+ // 2) images
+ req.body.images = [];
+ await Promise.all(req.files.images.map( async (file ,i) => {
+   const filename = `tour-${req.params.id}-${Date.now()}-${ i + 1 }.jpeg`;
+   await sharp(file.buffer)
+   .resize({width :20000 , height: 1333})
+   .toFormat('jpeg')
+   .jpeg({quality:90})
+   .toFile(`public/images/tours/${filename}`);
+
+   req.body.images.push(filename);
+ }))
  next();
 }
 
