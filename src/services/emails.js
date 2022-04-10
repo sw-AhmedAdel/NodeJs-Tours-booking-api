@@ -2,7 +2,6 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');// used to create transporter to send emails
 require('dotenv').config();
 const pug = require('pug');
-const path = require('path');
 const htmlToText= require('html-to-text');
 
 class Email {
@@ -10,11 +9,19 @@ class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.from =`Ahmed adel <${process.env.EMAIL_FRON}> `;
+    this.from =`Ahmed adel <${process.env.SENDGRID_EMAIL_FROM}> `;//must use actuall email and use from
   };
 
   newTransporter() {
     if(process.env.NODE_ENV==='production') {
+      
+    return nodemailer.createTransport({
+      service:'SendGrid',
+      auth:{
+        user: process.env.SENDGRRID_USERNAME,
+        pass: process.env.SENDGRRID_PASS,
+      }
+    })
 
     }
    return nodemailer.createTransport({
@@ -60,6 +67,7 @@ class Email {
 module.exports = Email;
 /*
 const sendEmail  =  async (options) =>{
+  USING MAILTRAP
   // 1 create transporter > servie like gmail
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST  ,

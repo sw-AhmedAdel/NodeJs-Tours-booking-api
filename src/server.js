@@ -21,7 +21,7 @@ const {
 
 async function startServer() { 
   await startMongo();
-   
+  
  if(process.argv[2] ==='d') {
    await DeleteAllData();
  }
