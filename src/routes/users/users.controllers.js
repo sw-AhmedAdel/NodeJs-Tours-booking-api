@@ -15,7 +15,7 @@ const sendTokenViaCookie = require('../../services/cookie');
 const appError = require('../../services/class.err.middleware');
 const multer = require('multer');
 const sharp = require('sharp');
-
+const Email = require('../../services/emails');
 /* here store the image in the desk not memory
 const multerStorage = multer.diskStorage({
   destination: (req , file , cb) => {
@@ -68,6 +68,9 @@ async function httpGetAllUsers(req ,res , next) {
 async function httpCreateUser(req , res , next) {
    const user_info = req.body;
    const user = await CreateUser(user_info);
+   const url=`$${req.protocol}://${req.get('host')}/my/profile`;
+   //user will get the email with a button when he clicks on it he will go to his account using url
+   await new Email(user , url).sendWelcome();
    const token = await user.getAuthToken();
    sendTokenViaCookie(token , res)
    return res.status(201).json({
@@ -123,6 +126,8 @@ async function httpUpdateUSer(req , res , next) {
 }
 
 async function httpDeleteMyAccount (req , res , next) {
+  const url = `${req.protocol}://${req.get('host')}/app/signup`;
+  await new Email(req.user , url).sendGoodBy();
   await DeleteUser(req.user._id);
   return res.status(200).json({
     status:'success',

@@ -1,7 +1,7 @@
 
 const users = require('../models/users.mongo');
 const appError = require('../services/class.err.middleware');
-const sendEmail = require('../services/emails');
+const Email = require('../services/emails');
 const crypto  = require('crypto');
 const  sendTokenViaCookie = require('../services/cookie');
 
@@ -19,14 +19,16 @@ async function forgotPassword (req , res , next) {
    const resetToken = await user.createPasswordResetToken();
    const resetUrl=`${req.protocol}://${req.get('host')}/v1/users/resetPassword/${resetToken}`;
    const message =`Forgot your password? Submit a PATCH request with your new password 
-   and passwordConfirm to ${resetUrl}, if you didn't forget your password, please ignore this email.`
+   and passwordConfirm to ${resetUrl} (valid valid for onlu 10 mints), if you didn't forget your password, please ignore this email.`
    
    try{
+     /*
    await sendEmail({
      email : user.email,
      subject: 'your password reset token (valid for 10mins)',
      message,
-   })
+   })*/
+   await new Email(user , resetUrl).sendPasswordreset('send password reset token' ,message)
    return res.status(200).json({
      status:'success',
      message:'Token send to email'
