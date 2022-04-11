@@ -18,6 +18,12 @@ const bookingSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 })
+//to populate the tours that users have
+bookingSchema.virtual('tours' , {
+  ref:'tour',
+  foreignField:'tour',
+  localField:'_id'
+})
 
 bookingSchema.pre(/^find/ , function(next) {
   this.populate({

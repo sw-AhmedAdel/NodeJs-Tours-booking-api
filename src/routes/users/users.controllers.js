@@ -169,7 +169,6 @@ async function httpGetMyTours(req, res , next) {
   const tours = await GetMyTours(req.user._id);
   return res.status(200).json({
     status:'success',
-    results:tours.length,
     data:tours
   })
 }

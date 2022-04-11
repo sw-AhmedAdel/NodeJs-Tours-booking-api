@@ -61,6 +61,7 @@ passwordChangedAt : Date,
 })
 
 
+
 userSchema.methods.createPasswordResetToken = async function(){
  const user = this;
  const newToken = crypto.randomBytes(32).toString('hex');

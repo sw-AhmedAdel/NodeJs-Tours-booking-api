@@ -32,7 +32,7 @@ async function DeleteUser (id) {
 }
 
 async function GetMyTours(user_id) {
-  const userBookings = await bookings.find({
+  /*const userBookings = await bookings.find({
     user : user_id,
   })
   const toursId = userBookings.map((el) => el.tour); // return all tours id
@@ -40,8 +40,12 @@ async function GetMyTours(user_id) {
     _id: {
      $in : toursId
     }
-  })
-  return userTours;
+  })*/
+  const userBookings = await bookings.find({
+    user : user_id,
+  }).populate('tours')
+
+  return userBookings;
  }
 
 module.exports = {
