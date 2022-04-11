@@ -34,6 +34,11 @@ function handelGeoLocation() {
   return new appError(message , 401);
 }
 
+function handlingDuplicateReview() {
+ const message = 'You already have made a review!!';
+ return new appError(message , 401);
+}
+
 //i want to see error while i am dev 
 function sendErrorDev (err , res) {
   let error = Object.assign(err);
@@ -82,6 +87,11 @@ function handlingErrorMiddleware (err , req , res , next)  {
      if( error.name ==='CastError') {// invalid id
       error = handleInvalidId (error);
      }
+
+     if(error.code === 11000 && error.keyPattern.tour ===1 && err.keyPattern.user ===1)  {// dublicate review
+      error = handlingDuplicateReview();
+    }
+
      if(error.code === 11000) {// dublicate like emails
       error = handlingDuplicateDatabase(error);
     }
@@ -96,8 +106,9 @@ function handlingErrorMiddleware (err , req , res , next)  {
     if(error.name ==='JsonWebTokenError') {
       error = handelInvalidToken();
     }
-  
-    sendErrorProd(error, res);    
+
+   
+     sendErrorProd(error, res);    
    } 
 }
 

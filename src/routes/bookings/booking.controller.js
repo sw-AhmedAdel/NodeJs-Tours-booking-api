@@ -37,6 +37,7 @@ async function getCheckoutSession (req , res , next) {
     user:req.user._id,
     price: tour.price,
   }
+ 
   await CreateBooking(book);
   return  res.status(200).json({
     status: 'success',

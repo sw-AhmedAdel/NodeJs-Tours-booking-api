@@ -18,7 +18,7 @@ async function  GetALLTours (filter  , skip , limit , sortBy , fields) {
 // post new tour
 async function CreateNewTour (tour) {
 
-  const NewTour = await tours(tour);
+  const NewTour = await tours.create(tour)
   await NewTour.save();
   return NewTour;
    
@@ -191,5 +191,7 @@ module.exports = {
   FindToursWitn,
   getDistances
 }
+
+
 
 

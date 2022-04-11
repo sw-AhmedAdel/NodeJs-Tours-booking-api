@@ -8,10 +8,17 @@ const appError = require('../services/class.err.middleware');
 async function auth (req , res , next ) {
    
     
-   const token = req.headers.authorization.split(' ')[1];
-   if(!token) {
-    return next(new appError('you are not loged in, please log in to have access', 401))
-   }
+  let token;
+  if (req.headers.authorization &&req.headers.authorization.startsWith('Bearer'))
+   {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    return next(
+      new appError('You are not logged in! Please log in to get access.', 401)
+    );
+  }
 
    const decoded = await promisify( jwt.verify)(token , secret );
    const user = await users.findOne({

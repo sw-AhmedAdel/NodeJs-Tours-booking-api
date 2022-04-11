@@ -19,7 +19,7 @@ function getTopTours (req , res , next) {
   next();
 }
 
-function fliterObject (obj , ...arr) {
+function filterObject (obj , ...arr) {
  const newObj = {};
  Object.keys(obj).forEach((el) => {
    if(arr.includes(el)) {
@@ -44,7 +44,7 @@ module.exports = {
   getPagination,
   getTopTours,
   catchAsync,
-  fliterObject
+  filterObject
 };
 
 

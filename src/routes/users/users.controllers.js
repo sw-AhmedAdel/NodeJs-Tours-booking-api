@@ -8,7 +8,7 @@ const {
 } = require('../../models/users.models');
 
 const {
-  fliterObject
+  filterObject
 }  = require('../../services/query');
 
 const sendTokenViaCookie = require('../../services/cookie');
@@ -45,12 +45,12 @@ const resizeImage = async (req , res , next) => {
   if(!req.file) {
     return next();
   }
-  const filename = `user-${req.user._id}-${Date.now()}.jpeg`
+  req.file.filename = `user-${req.user._id}-${Date.now()}.jpeg`
   await sharp(req.file.buffer)
   .resize({width:500 , height:500})
   .toFormat('jpeg')
   .jpeg({quality:90}) // compressed it's size
-  .toFile(`public/images/users/${filename}`);
+  .toFile(`public/images/users/${req.file.filename}`);
 
   next();
 }
@@ -108,13 +108,14 @@ async function httpLoginUser (req , res , next) {
     token,
   })
 }
+
 async function httpUpdateUSer(req , res , next) {
   //console.log(req.file);
   if(req.body.password || req.body.passwordConfirm){
     return next(new appError('This route is not for password update, please use /updatepassword', 400));
   }
   
-  const filter = fliterObject(req.body , 'name', 'email')
+  const filter = filterObject(req.body , 'name', 'email')
   if(req.file) {
     filter.photo = req.file.filename
   }
@@ -168,6 +169,7 @@ async function httpGetMyTours(req, res , next) {
   const tours = await GetMyTours(req.user._id);
   return res.status(200).json({
     status:'success',
+    results:tours.length,
     data:tours
   })
 }

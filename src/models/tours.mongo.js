@@ -111,7 +111,10 @@ const toursSchema = new mongoose.Schema({
      ref:'user',// here stor user id as a ref 
    }
  ]
- } ,
+ ,
+ 
+ }
+  ,
   {
   timestamps: true,
   toJSON : {virtuals : true},
@@ -158,8 +161,7 @@ toursSchema.index({ // compained index
   price:1 , ratingsAverage: -1
 })
 
-toursSchema.index({slug : 1})
-toursSchema.index({startLocation : '2dsphere'}); //index for location
+ toursSchema.index({startLocation : '2dsphere'}); //index for location
 //index needs to be a 2D sphere index if the data describes real points on the Earth like sphere.
 
 // use middleware to modify the data before saving it in mongo

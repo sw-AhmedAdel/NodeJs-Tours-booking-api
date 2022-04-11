@@ -6,6 +6,7 @@ const {
   findReview,
   DeleteReview
 } = require('../../models/reviews.models');
+const bookings = require('../../models/booking.mongo');
 
 const appError = require('../../services/class.err.middleware');
 
@@ -34,9 +35,16 @@ async function httpCreateReview(req , res , next) {
 if(!req.params.tourid){
   return next(new appError('please provide us with tour id, 404'));
 }
+const user_id = req.user._id;
+const tour_id= req.params.tourid;
+  const bookedThisTour = await bookings.findOne({
+    user: user_id,
+    tour: tour_id,
+  })
+  if(!bookedThisTour) {
+    return next(new appError('You must book this tour before making a review' , 400));
+  }
   const review = req.body;
-  const user_id = req.user._id;
-  const tour_id= req.params.tourid;
   const tour = await FindTour(tour_id);
   if(!tour) {
     return next(new appError('No tour was found', 404));
@@ -46,6 +54,7 @@ if(!req.params.tourid){
     status:'success',
     data: newReview,
   })
+  
 }
 
 async function httpUpdateMyReview(req , res ,next) {

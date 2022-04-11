@@ -117,7 +117,6 @@ async function httpGetALLTours(req , res , next) {
  }
 
 async function httpUpdateTour (req , res , next) {
-  console.log(req.fields);
   const id = req.params.id;
   const tour = await findTour(id);
  

@@ -1,3 +1,4 @@
+const { json } = require("express");
 
 
 class filterFeatures {
@@ -27,6 +28,7 @@ class filterFeatures {
       return  req.query.fields.split(',').join(' ');
      }
   }
+ 
 }
 
 
