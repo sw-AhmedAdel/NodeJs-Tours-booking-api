@@ -1,9 +1,10 @@
 designed an algorithm for 
- Implemented JWT authentication with cookies and authorization. 
- Implemented signup, login, logout, express errors middleware.Forgot reset update password, sending 
+
+ 1-Implemented JWT authentication with cookies and authorization. 
+ 2-Implemented signup, login, logout, express errors middleware.Forgot reset update password, sending 
  emails, filter queries.
- Users can book tours using stripe API integrated into the backend. They also can rate and review them.
- Crud operations for users, tours, bookings, and reviews .
- Creating a database for users, tours, bookings, reviews.
- Get the nearest tours to you depending on your geolocation and get each tours geolocation
- Calculate the average tour rating.
+ 3-Users can book tours using stripe API integrated into the backend. They also can rate and review them.
+ 4-Crud operations for users, tours, bookings, and reviews .
+ 5-Creating a database for users, tours, bookings, reviews.
+ 6-Get the nearest tours to you depending on your geolocation and get each tours geolocation
+ 7-Calculate the average tour rating.
